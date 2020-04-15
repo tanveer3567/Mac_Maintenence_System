@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>AdminFunctions.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">functions</a> &gt; <a href="index.source.html" class="el_package">MAC_Maintenance_System</a> &gt; <span class="el_source">AdminFunctions.java</span></div><h1>AdminFunctions.java</h1><pre class="source lang-java linenums">package MAC_Maintenance_System;
+
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+<span class="fc" id="L19">public class AdminFunctions {</span>
+<span class="fc" id="L20">	private UtilFunctions util = new UtilFunctions();</span>
+	public WebDriver driver;
+	public Properties prop;		
+	
+	public void SearchUserRole(WebDriver driver, String admin_login_username ,String admin_login_password, 
+			String username, String utaid, String role, String snapShotName) throws InterruptedException {
+		//System.out.println(&quot;Test: Uname &quot; + admin_login_username +&quot; pwd &quot; + admin_login_password );
+<span class="fc" id="L27">		util.Login(driver, prop, admin_login_username, admin_login_password, &quot;Search User Role&quot;);</span>
+		//Thread.sleep(500);
+		//Click on the Search User Role link
+<span class="fc" id="L30">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Search_User_Role&quot;))).click();</span>
+<span class="fc" id="L31">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_SearchProf_Username&quot;))).clear();</span>
+<span class="fc" id="L32">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_SearchProf_Username&quot;))).sendKeys(username);</span>
+<span class="fc" id="L33">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_SearchProf_UTA_ID&quot;))).clear();</span>
+<span class="fc" id="L34">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_SearchProf_UTA_ID&quot;))).sendKeys(utaid);</span>
+<span class="fc" id="L35">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_SearchProf_Role&quot;)))).selectByVisibleText(role);</span>
+		//Click on Submit Button
+<span class="fc" id="L37">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_SearchProf_Submit&quot;))).click();</span>
+<span class="fc" id="L38">		util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L39">	}</span>
+	
+	public void ChangeUserRole(WebDriver driver, String admin_login_username ,String admin_login_password, String searchProfRole,String changeProfRole, String snapShotName) throws InterruptedException {
+<span class="fc" id="L42">		util.Login(driver, prop, admin_login_username, admin_login_password, &quot;Change User Role&quot;);</span>
+		//Thread.sleep(500);
+		//Click on the Search User Role link
+<span class="fc" id="L45">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Search_User_Role&quot;))).click();</span>
+<span class="fc" id="L46">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_SearchProf_Role&quot;)))).selectByVisibleText(searchProfRole);</span>
+<span class="fc" id="L47">		Thread.sleep((5000));</span>
+		//Click on Submit Button
+<span class="fc" id="L49">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_SearchProf_Submit&quot;))).click();</span>
+<span class="fc" id="L50">		Thread.sleep((5000));</span>
+		//CLick on View link
+<span class="fc" id="L52">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_ViewProf_Role&quot;))).click();</span>
+		//Thread.sleep((1000));
+<span class="fc" id="L54">		util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L55">		Thread.sleep((5000));		</span>
+
+<span class="fc" id="L57">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_ViewProf_Role&quot;)))).selectByVisibleText(changeProfRole);</span>
+		//Click on change button
+<span class="fc" id="L59">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_ChangeRole&quot;))).click();</span>
+		
+<span class="fc" id="L61">		util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L62">	}</span>
+
+	public void editUserProfile(WebDriver driver, String admin_login_username, String admin_login_password, String user_update_username, String searchProfRole, 
+			String firstname, String middlename, String lastname,
+			String phone, String email, String numericAddress, String streetAddress, String city,
+			String state, String zipcode, String snapShotName) throws InterruptedException {
+		String updtFirstname, updtLastname, updtPhone, updtEmail, updtNumericAddress, updtStreetAddress, updtCity,
+			updtState, updtZipcode;
+<span class="fc" id="L70">		util.Login(driver, prop, admin_login_username, admin_login_password, &quot;Edit User Profile&quot;);</span>
+		//Thread.sleep(500);
+		//Click on Search Profile link
+<span class="fc" id="L73">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_SearchProfile&quot;))).click();</span>
+		//Provide username and role
+<span class="fc" id="L75">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_SearchProf_Username&quot;))).sendKeys(user_update_username);</span>
+<span class="fc" id="L76">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_SearchProf_Role&quot;)))).selectByVisibleText(searchProfRole);</span>
+<span class="fc" id="L77">		Thread.sleep(1000);</span>
+		//Click on Submit Button
+<span class="fc" id="L79">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_SearchProf_Submit&quot;))).click();</span>
+<span class="fc" id="L80">		Thread.sleep(5000);</span>
+		//Click on view
+<span class="fc" id="L82">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_ViewProfile&quot;))).click();</span>
+<span class="fc" id="L83">		Thread.sleep(1000);</span>
+		//Click on Update profile link
+<span class="fc" id="L85">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_UpdateProfile&quot;))).click();</span>
+		
+		// Update firstname
+<span class="fc" id="L88">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Firstname&quot;))).clear();</span>
+<span class="fc" id="L89">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Firstname&quot;))).sendKeys(firstname);</span>
+	    //Thread.sleep(300);
+	    // Update middleName
+<span class="fc" id="L92">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Middlename&quot;))).clear();</span>
+<span class="fc" id="L93">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Middlename&quot;))).sendKeys(middlename);</span>
+	    //Thread.sleep(300);
+	    // Update lastname
+<span class="fc" id="L96">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Lastname&quot;))).clear();</span>
+<span class="fc" id="L97">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Lastname&quot;))).sendKeys(lastname);</span>
+	    //Thread.sleep(300);
+	    // Update phone
+<span class="fc" id="L100">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Phone&quot;))).clear();</span>
+<span class="fc" id="L101">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Phone&quot;))).sendKeys(phone);</span>
+	    //Thread.sleep(300);
+	    // Update email
+<span class="fc" id="L104">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Email&quot;))).clear();</span>
+<span class="fc" id="L105">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Email&quot;))).sendKeys(email);</span>
+	    //Thread.sleep(300);
+	    // Update numericAddress
+<span class="fc" id="L108">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_NumericAddress&quot;))).clear();</span>
+<span class="fc" id="L109">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_NumericAddress&quot;))).sendKeys(numericAddress);</span>
+	    //Thread.sleep(300);
+	    // Update StreetAddress
+<span class="fc" id="L112">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_StreetAddress&quot;))).clear();</span>
+<span class="fc" id="L113">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_StreetAddress&quot;))).sendKeys(streetAddress);</span>
+	    //Thread.sleep(300);
+	    // Update city
+<span class="fc" id="L116">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_City&quot;))).clear();</span>
+<span class="fc" id="L117">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_City&quot;))).sendKeys(city);</span>
+	    //Thread.sleep(300);
+<span class="fc" id="L119">	    new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_State&quot;)))).selectByValue(state);</span>
+	    //Thread.sleep(300);
+	    // Update zipcode
+<span class="fc" id="L122">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Zipcode&quot;))).clear();</span>
+<span class="fc" id="L123">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_Update_Zipcode&quot;))).sendKeys(zipcode);</span>
+	    //Thread.sleep(300);
+	    // Click on submit Button
+<span class="fc" id="L126">	    driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Update_submit&quot;))).click();	</span>
+<span class="fc" id="L127">	    util.takeScreenShot(driver, snapShotName);</span>
+	    
+<span class="fc" id="L129">	    List&lt;WebElement&gt; links = driver.findElements(By.tagName(&quot;a&quot;));</span>
+	    
+<span class="fc bfc" id="L131" title="All 2 branches covered.">	    for(WebElement we : links) {</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">		    if(we.getText().contentEquals(&quot;Update profile&quot;)) {</span>
+<span class="fc" id="L133">			    updtFirstname = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_Firstname&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L134">			    updtLastname = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_Lastname&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L135">			    updtPhone = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_Phone&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L136">			    updtEmail = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_Email&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L137">			    updtStreetAddress = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_StreetAddress&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L138">			    updtCity = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_City&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L139">			    updtState = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_State&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L140">			    updtZipcode = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_Zipcode&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L141">			    updtNumericAddress = driver.findElement(By.id(prop.getProperty(&quot;Txt_Updated_NumericAddress&quot;))).getAttribute(&quot;value&quot;);</span>
+			    
+<span class="fc" id="L143">			    assertTrue(updtFirstname.equals(firstname));</span>
+<span class="fc" id="L144">			    assertTrue(updtLastname.equals(lastname));</span>
+<span class="fc" id="L145">			    assertTrue(updtPhone.equals(phone));</span>
+<span class="fc" id="L146">			    assertTrue(updtEmail.equals(email));</span>
+<span class="fc" id="L147">			    assertTrue(updtNumericAddress.equals(numericAddress));</span>
+<span class="fc" id="L148">			    assertTrue(updtStreetAddress.equals(streetAddress));</span>
+<span class="fc" id="L149">			    assertTrue(updtCity.equals(city));</span>
+<span class="fc" id="L150">			    assertTrue(updtState.equals(state));</span>
+<span class="fc" id="L151">			    assertTrue(updtZipcode.equals(zipcode));</span>
+		    }
+	    }
+	    
+<span class="fc" id="L155">	    driver.findElement(By.id(prop.getProperty(&quot;Lnk_Update_Home&quot;))).click();	</span>
+<span class="fc" id="L156">	    driver.findElement(By.id(prop.getProperty(&quot;Lnk_logout&quot;))).click();</span>
+<span class="fc" id="L157">	}</span>
+	
+	public void verifyEditUserProfileErrorMessages(WebDriver driver, String passwordError, String firstnameError, 
+			String lastnameError, String phoneError,String emailError, String streetAddressError, String cityError,
+			String zipcodeError, String snapShotName) throws InterruptedException
+	{
+		try {
+<span class="nc" id="L164">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_PasswordError&quot;))).getAttribute(&quot;value&quot;).equals(passwordError));</span>
+<span class="nc" id="L165">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_FirstnameError&quot;))).getAttribute(&quot;value&quot;).equals(firstnameError));</span>
+<span class="nc" id="L166">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_LastnameError&quot;))).getAttribute(&quot;value&quot;).equals(lastnameError));</span>
+<span class="nc" id="L167">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_PhoneError&quot;))).getAttribute(&quot;value&quot;).equals(phoneError));</span>
+<span class="nc" id="L168">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_EmailError&quot;))).getAttribute(&quot;value&quot;).equals(emailError));</span>
+<span class="nc" id="L169">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_StreetAddressError&quot;))).getAttribute(&quot;value&quot;).equals(streetAddressError));</span>
+<span class="nc" id="L170">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_CityError&quot;))).getAttribute(&quot;value&quot;).equals(cityError));</span>
+<span class="nc" id="L171">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_ZipcodeError&quot;))).getAttribute(&quot;value&quot;).equals(zipcodeError));</span>
+<span class="pc" id="L172">		} catch (NoSuchElementException e) {}</span>
+		
+<span class="fc" id="L174">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

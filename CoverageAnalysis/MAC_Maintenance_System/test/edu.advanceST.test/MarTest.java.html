@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MarTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.test</a> &gt; <span class="el_source">MarTest.java</span></div><h1>MarTest.java</h1><pre class="source lang-java linenums">package edu.advanceST.test;
+
+import static org.junit.Assert.assertEquals;
+
+import java.text.ParseException;
+import java.util.Calendar;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import edu.advanceST.model.Mar;
+import edu.advanceST.model.MarError;
+import junitparams.FileParameters;
+import junitparams.JUnitParamsRunner;
+
+@RunWith(JUnitParamsRunner.class)
+<span class="fc" id="L19">public class MarTest {</span>
+
+<span class="fc" id="L21">	private Mar mar = new Mar();</span>
+<span class="fc" id="L22">	private Calendar c = Calendar.getInstance();</span>
+
+	@Before
+	public void before() {
+
+<span class="fc" id="L27">		c = Calendar.getInstance();</span>
+<span class="fc" id="L28">		c.set(Calendar.HOUR, 0);</span>
+<span class="fc" id="L29">		c.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L30">		c.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L31">		c.set(Calendar.MILLISECOND, 0);</span>
+
+<span class="fc" id="L33">		mar.setAssigned(true);</span>
+<span class="fc" id="L34">		mar.setDate(c.getTime());</span>
+<span class="fc" id="L35">		mar.setDescription(&quot;Fix it&quot;);</span>
+<span class="fc" id="L36">		mar.setFacilityType(&quot;Multipurpose Rooms&quot;);</span>
+<span class="fc" id="L37">		mar.setMarNumber(123L);</span>
+<span class="fc" id="L38">		mar.setName(&quot;MR2&quot;);</span>
+<span class="fc" id="L39">		mar.setReportedBy(&quot;user123&quot;);</span>
+<span class="fc" id="L40">		mar.setUrgency(&quot;minor&quot;);</span>
+		
+<span class="fc" id="L42">		new Mar(123L, &quot;Multipurpose Rooms&quot;, &quot;MR2&quot;, &quot;minor&quot;, &quot;Fix it&quot;, &quot;user123&quot;, c.getTime(), true);</span>
+<span class="fc" id="L43">	}</span>
+
+	@Test
+	@FileParameters(&quot;test/edu/advanceST/test/MarTestCases.csv&quot;)
+	public void testMar(int tcNo, String name, String description, String nameError, String descriptionError)
+			throws ParseException {
+
+<span class="fc" id="L50">		MarError error = Mar.validate(name, description);</span>
+<span class="fc" id="L51">		assertEquals(nameError, error.getNameError());</span>
+<span class="fc" id="L52">		assertEquals(descriptionError, error.getDescriptionError());</span>
+<span class="fc" id="L53">	}</span>
+
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L57">		assertEquals(true, mar.getAssigned());</span>
+<span class="fc" id="L58">		assertEquals(c.getTime(), mar.getDate());</span>
+<span class="fc" id="L59">		assertEquals(&quot;Fix it&quot;, mar.getDescription());</span>
+<span class="fc" id="L60">		assertEquals(&quot;Multipurpose Rooms&quot;, mar.getFacilityType());</span>
+<span class="fc" id="L61">		assertEquals(123L, mar.getMarNumber().longValue());</span>
+<span class="fc" id="L62">		assertEquals(&quot;MR2&quot;, mar.getName());</span>
+<span class="fc" id="L63">		assertEquals(&quot;user123&quot;, mar.getReportedBy());</span>
+<span class="fc" id="L64">		assertEquals(&quot;minor&quot;, mar.getUrgency());</span>
+<span class="fc" id="L65">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

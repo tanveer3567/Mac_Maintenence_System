@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MarController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.controllers</a> &gt; <span class="el_source">MarController.java</span></div><h1>MarController.java</h1><pre class="source lang-java linenums">package edu.advanceST.controllers;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import edu.advanceST.data.FacilityDAO;
+import edu.advanceST.data.LoginDAO;
+import edu.advanceST.data.MarDAO;
+import edu.advanceST.model.AssignMar;
+import edu.advanceST.model.AssignMarError;
+import edu.advanceST.model.Mar;
+import edu.advanceST.model.MarError;
+
+@WebServlet(urlPatterns = { &quot;/viewMar&quot;, &quot;/createMAR&quot;, &quot;/assignMar&quot;, &quot;/searchMar&quot;, &quot;/searchAssgMar&quot;, &quot;/listMars&quot; })
+<span class="fc" id="L25">public class MarController extends HttpServlet {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+<span class="fc" id="L31">		HttpSession session = request.getSession();</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">		if (request.getServletPath().equalsIgnoreCase(&quot;/searchMar&quot;)) {</span>
+<span class="fc" id="L33">			getServletContext().getRequestDispatcher(&quot;/searchMar.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/searchAssgMar&quot;)) {</span>
+<span class="fc" id="L35">			List&lt;Mar&gt; mars = new MarDAO().getMars(session.getAttribute(&quot;username&quot;).toString());</span>
+<span class="fc" id="L36">			request.setAttribute(&quot;mars&quot;, mars);</span>
+<span class="fc" id="L37">			getServletContext().getRequestDispatcher(&quot;/searchAssgMar.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/assignMar&quot;)) {</span>
+<span class="fc" id="L39">			request.setAttribute(&quot;repairers&quot;, new LoginDAO().getAllRepairers());</span>
+<span class="fc" id="L40">			request.setAttribute(&quot;marNumber&quot;, request.getParameter(&quot;marNumber&quot;));</span>
+<span class="fc" id="L41">			getServletContext().getRequestDispatcher(&quot;/assignMar.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/createMAR&quot;)) {</span>
+<span class="fc" id="L43">			getServletContext().getRequestDispatcher(&quot;/createMAR.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L44">		} else {</span>
+<span class="fc" id="L45">			Mar mar = new MarDAO().getMarByNumber(Long.valueOf(request.getParameter(&quot;marNumber&quot;)));</span>
+<span class="fc" id="L46">			request.setAttribute(&quot;mar&quot;, mar);</span>
+<span class="fc" id="L47">			AssignMar assignMar = new MarDAO().getAssignMarByNumber(Long.valueOf(request.getParameter(&quot;marNumber&quot;)));</span>
+<span class="fc" id="L48">			request.setAttribute(&quot;assignMar&quot;, assignMar);</span>
+<span class="fc" id="L49">			getServletContext().getRequestDispatcher(&quot;/viewMar.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L51">	}</span>
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+<span class="fc" id="L55">		HttpSession session = request.getSession();</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		if (request.getServletPath().equalsIgnoreCase(&quot;/searchMar&quot;)) {</span>
+<span class="fc" id="L57">			postSearchMar(request, response);</span>
+<span class="fc" id="L58">			getServletContext().getRequestDispatcher(&quot;/searchMar.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/assignMar&quot;)) {</span>
+<span class="fc" id="L60">			postAssignMar(request, response);</span>
+<span class="fc" id="L61">		} else {</span>
+<span class="fc" id="L62">			postCreateMar(request, response);</span>
+		}
+<span class="fc" id="L64">	}</span>
+
+	private void postSearchMar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L69">		String assigned = request.getParameter(&quot;assigned&quot;);</span>
+<span class="fc" id="L70">		java.sql.Date assignedDate = null;</span>
+		try {
+<span class="fc" id="L72">			assignedDate = new java.sql.Date(</span>
+<span class="fc" id="L73">					new SimpleDateFormat(&quot;yyyy-MM-dd&quot;).parse(request.getParameter(&quot;assignedDate&quot;)).getTime());</span>
+<span class="fc" id="L74">		} catch (ParseException e) {</span>
+<span class="fc" id="L75">			System.out.println();</span>
+		}
+<span class="fc" id="L77">		List&lt;Mar&gt; mars = new MarDAO().searchMars(assigned, assignedDate);</span>
+<span class="fc" id="L78">		request.setAttribute(&quot;mars&quot;, mars);</span>
+<span class="fc" id="L79">	}</span>
+
+	private void postCreateMar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L84">		Object object = getMARForm(request);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">		if (object instanceof Mar) {</span>
+<span class="fc" id="L86">			Mar mar = (Mar) object;</span>
+<span class="fc" id="L87">			new MarDAO().addMARdetails(mar);</span>
+<span class="fc" id="L88">			getServletContext().getRequestDispatcher(&quot;/home.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L89">		} else {</span>
+<span class="fc" id="L90">			request.setAttribute(&quot;error&quot;, (MarError) object);</span>
+<span class="fc" id="L91">			getServletContext().getRequestDispatcher(&quot;/createMAR.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L93">	}</span>
+
+	private Object getMARForm(HttpServletRequest request) {
+<span class="fc" id="L96">		String facilityType = request.getParameter(&quot;facilityType&quot;);</span>
+<span class="fc" id="L97">		String name = request.getParameter(&quot;name&quot;);</span>
+<span class="fc" id="L98">		String urgency = request.getParameter(&quot;urgency&quot;);</span>
+<span class="fc" id="L99">		String description = request.getParameter(&quot;description&quot;);</span>
+<span class="fc" id="L100">		String reportedBy = request.getParameter(&quot;reportedBy&quot;);</span>
+<span class="fc" id="L101">		MarError error = Mar.validate(name, description);</span>
+<span class="fc bfc" id="L102" title="All 4 branches covered.">		if (error.getNameError().isEmpty() &amp;&amp; error.getDescriptionError().isEmpty()) {</span>
+<span class="fc" id="L103">			return new Mar(null, facilityType, name, urgency, description, reportedBy, new Date(), false);</span>
+		} else {
+<span class="fc" id="L105">			return error;</span>
+		}
+	}
+
+	private void postAssignMar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L112">		Object object = getAssignMar(request);</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">		if (object instanceof AssignMar) {</span>
+<span class="fc" id="L114">			new MarDAO().addAssignMar((AssignMar) object);</span>
+<span class="fc" id="L115">			getServletContext().getRequestDispatcher(&quot;/home.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L116">		} else {</span>
+<span class="fc" id="L117">			request.setAttribute(&quot;error&quot;, (AssignMarError) object);</span>
+<span class="fc" id="L118">			request.setAttribute(&quot;repairers&quot;, new LoginDAO().getAllRepairers());</span>
+<span class="fc" id="L119">			request.setAttribute(&quot;marNumber&quot;, request.getParameter(&quot;marNumber&quot;));</span>
+<span class="fc" id="L120">			getServletContext().getRequestDispatcher(&quot;/assignMar.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L122">	}</span>
+
+	private Object getAssignMar(HttpServletRequest request) {
+<span class="fc" id="L125">		long marNumber = Long.valueOf(request.getParameter(&quot;marNumber&quot;));</span>
+<span class="fc" id="L126">		String assignedTo = request.getParameter(&quot;assignedTo&quot;);</span>
+<span class="fc" id="L127">		String etr = request.getParameter(&quot;etr&quot;);</span>
+<span class="fc" id="L128">		Date assignedDate = null;</span>
+		try {
+<span class="fc" id="L130">			assignedDate = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;).parse(request.getParameter(&quot;assignedDate&quot;));</span>
+<span class="pc" id="L131">		} catch (ParseException e) {</span>
+		}
+<span class="fc" id="L133">		AssignMarError error = AssignMar.validate(assignedTo, assignedDate);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">		if (error.getAssignedDateError().isEmpty()) {</span>
+<span class="fc" id="L135">			return new AssignMar(marNumber, assignedTo, assignedDate, etr);</span>
+		} else {
+<span class="fc" id="L137">			return error;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>AssignMar.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.model</a> &gt; <span class="el_source">AssignMar.java</span></div><h1>AssignMar.java</h1><pre class="source lang-java linenums">package edu.advanceST.model;
+
+import java.util.Date;
+import java.util.regex.Pattern;
+
+public class AssignMar {
+
+	private long marNumber;
+	private String assignedTo;
+	private Date assignedDate;
+	private String etr;
+	
+<span class="fc" id="L13">	public AssignMar() {</span>
+		
+<span class="fc" id="L15">	}</span>
+	
+<span class="fc" id="L17">	public AssignMar(long marNumber, String assignedTo, Date assignedDate, String etr) {</span>
+<span class="fc" id="L18">		this.marNumber = marNumber;</span>
+<span class="fc" id="L19">		this.assignedTo = assignedTo;</span>
+<span class="fc" id="L20">		this.assignedDate = assignedDate;</span>
+<span class="fc" id="L21">		this.etr = etr;</span>
+<span class="fc" id="L22">	}</span>
+
+	public long getMarNumber() {
+<span class="fc" id="L25">		return marNumber;</span>
+	}
+
+	public void setMarNumber(long marNumber) {
+<span class="fc" id="L29">		this.marNumber = marNumber;</span>
+<span class="fc" id="L30">	}</span>
+
+	public String getAssignedTo() {
+<span class="fc" id="L33">		return assignedTo;</span>
+	}
+
+	public void setAssignedTo(String assignedTo) {
+<span class="fc" id="L37">		this.assignedTo = assignedTo;</span>
+<span class="fc" id="L38">	}</span>
+
+	public Date getAssignedDate() {
+<span class="fc" id="L41">		return assignedDate;</span>
+	}
+
+	public void setAssignedDate(Date assignedDate) {
+<span class="fc" id="L45">		this.assignedDate = assignedDate;</span>
+<span class="fc" id="L46">	}</span>
+
+	public String getEtr() {
+<span class="fc" id="L49">		return etr;</span>
+	}
+
+	public void setEtr(String etr) {
+<span class="fc" id="L53">		this.etr = etr;</span>
+<span class="fc" id="L54">	}</span>
+	
+	@SuppressWarnings(&quot;deprecation&quot;)
+	public static AssignMarError validate(String assignedTo, Date assignedDate){
+<span class="fc" id="L58">		AssignMarError error = new AssignMarError();</span>
+<span class="fc bfc" id="L59" title="All 4 branches covered.">		if (assignedTo.length() != 7 || !Pattern.compile(&quot;^[a-zA-Z0-9]*$&quot;).matcher(assignedTo).matches()) {</span>
+<span class="fc" id="L60">			error.setAssignedToError(&quot;assignedTo is required and it should be alphanumeric and its length should be equal to 7&quot;);</span>
+		}
+<span class="fc bfc" id="L62" title="All 4 branches covered.">		if (assignedDate == null || assignedDate.getDate() != new Date().getDate()) {</span>
+<span class="fc" id="L63">			error.setAssignedDateError(&quot;assignedDate is required and it should be today's date&quot;);</span>
+		}
+<span class="fc" id="L65">		return error;</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

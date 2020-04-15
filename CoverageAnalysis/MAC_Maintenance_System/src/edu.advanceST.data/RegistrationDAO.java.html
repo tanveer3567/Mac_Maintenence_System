@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>RegistrationDAO.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.data</a> &gt; <span class="el_source">RegistrationDAO.java</span></div><h1>RegistrationDAO.java</h1><pre class="source lang-java linenums">package edu.advanceST.data;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.advanceST.model.Credentials;
+import edu.advanceST.model.SystemUser;
+import edu.advanceST.model.UserDetails;
+import edu.advanceST.util.SQLConnection;
+
+<span class="fc" id="L16">public class RegistrationDAO {</span>
+
+<span class="fc" id="L18">	static SQLConnection DBMgr = SQLConnection.getInstance();</span>
+
+	public boolean addUserDetails(UserDetails userDetails, SystemUser systemUser, Credentials credentials) {
+<span class="fc" id="L21">		boolean isValid = false;</span>
+<span class="fc" id="L22">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L24">			PreparedStatement prepareStatement1 = conn</span>
+<span class="fc" id="L25">					.prepareStatement(&quot;insert into credentials (username, password) values (?,?)&quot;);</span>
+<span class="fc" id="L26">			prepareStatement1.setString(1, credentials.getUsername());</span>
+<span class="fc" id="L27">			prepareStatement1.setString(2, credentials.getPassword());</span>
+<span class="fc" id="L28">			int row1 = prepareStatement1.executeUpdate();</span>
+<span class="fc" id="L29">			PreparedStatement prepareStatement2 = conn</span>
+<span class="fc" id="L30">					.prepareStatement(&quot;insert into system_users (username, role) values (?,?)&quot;);</span>
+<span class="fc" id="L31">			prepareStatement2.setString(1, systemUser.getUsername());</span>
+<span class="fc" id="L32">			prepareStatement2.setString(2, systemUser.getRole());</span>
+<span class="fc" id="L33">			int row2 = prepareStatement2.executeUpdate();</span>
+<span class="fc" id="L34">			PreparedStatement prepareStatement3 = conn.prepareStatement(</span>
+<span class="fc" id="L35">					&quot;insert into user_details (username, firstname, middlename, lastname, uta_id, phone, email, numeric_address, street_address, city, state, zipcode) values (?,?,?,?,?,?,?,?,?,?,?,?)&quot;);</span>
+<span class="fc" id="L36">			prepareStatement3.setString(1, userDetails.getUsername());</span>
+<span class="fc" id="L37">			prepareStatement3.setString(2, userDetails.getFirstname());</span>
+<span class="fc" id="L38">			prepareStatement3.setString(3, userDetails.getMiddlename());</span>
+<span class="fc" id="L39">			prepareStatement3.setString(4, userDetails.getLastname());</span>
+<span class="fc" id="L40">			prepareStatement3.setLong(5, userDetails.getUtaId());</span>
+<span class="fc" id="L41">			prepareStatement3.setLong(6, userDetails.getPhone());</span>
+<span class="fc" id="L42">			prepareStatement3.setString(7, userDetails.getEmail());</span>
+<span class="fc" id="L43">			prepareStatement3.setLong(8, userDetails.getNumericAddress());</span>
+<span class="fc" id="L44">			prepareStatement3.setString(9, userDetails.getStreetAddress());</span>
+<span class="fc" id="L45">			prepareStatement3.setString(10, userDetails.getCity());</span>
+<span class="fc" id="L46">			prepareStatement3.setString(11, userDetails.getState());</span>
+<span class="fc" id="L47">			prepareStatement3.setString(12, userDetails.getZipcode());</span>
+<span class="fc" id="L48">			int row3 = prepareStatement3.executeUpdate();</span>
+<span class="fc" id="L49">			isValid = true;</span>
+<span class="fc" id="L50">			conn.commit();</span>
+<span class="fc" id="L51">			conn.close();</span>
+<span class="pc" id="L52">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L54">		return isValid;</span>
+	}
+
+	public boolean changeRole(String username, String role) {
+
+<span class="fc" id="L59">		boolean changed = false;</span>
+<span class="fc" id="L60">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L62">			PreparedStatement preparedStatement = conn</span>
+<span class="fc" id="L63">					.prepareStatement(&quot;update system_users set role = ? where username = ?&quot;);</span>
+<span class="fc" id="L64">			preparedStatement.setString(1, role);</span>
+<span class="fc" id="L65">			preparedStatement.setString(2, username);</span>
+<span class="fc" id="L66">			preparedStatement.executeUpdate();</span>
+<span class="fc" id="L67">			changed = true;</span>
+<span class="fc" id="L68">			conn.commit();</span>
+<span class="fc" id="L69">			conn.close();</span>
+<span class="pc" id="L70">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L72">		return changed;</span>
+	}
+
+	public String getRole(String username, String role) {
+<span class="fc" id="L76">		String frole = &quot;&quot;;</span>
+<span class="fc" id="L77">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L79">			Statement statement = conn.createStatement();</span>
+<span class="fc" id="L80">			String query = &quot;select * from system_users &quot;;</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">			if (role.isEmpty()) {</span>
+<span class="fc" id="L82">				query += &quot;where username = '&quot; + username + &quot;'&quot;;</span>
+<span class="fc" id="L83">			} else {</span>
+<span class="fc" id="L84">				query += &quot;where role = '&quot; + role + &quot;'&quot;;</span>
+<span class="fc" id="L85">				query += &quot; and username = '&quot; + username + &quot;'&quot;;</span>
+			}
+<span class="fc" id="L87">			ResultSet result = statement.executeQuery(query);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">			if (result.next()) {</span>
+<span class="fc" id="L89">				frole = result.getString(2);</span>
+			}
+<span class="fc" id="L91">			conn.close();</span>
+<span class="pc" id="L92">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L94">		return frole;</span>
+	}
+
+	public List&lt;UserDetails&gt; getProfilesList(String username, String utaId) {
+
+<span class="fc" id="L99">		List&lt;UserDetails&gt; userList = new ArrayList&lt;UserDetails&gt;();</span>
+<span class="fc" id="L100">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L102">			Statement statement = conn.createStatement();</span>
+<span class="fc" id="L103">			String query = &quot;select * from user_details &quot;;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">			if (!utaId.isEmpty()) {</span>
+<span class="fc" id="L105">				query += &quot;where uta_Id = &quot; + Long.valueOf(utaId);</span>
+<span class="fc" id="L106">				query += &quot; and username = '&quot; + username + &quot;'&quot;;</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">			} else if (!username.isEmpty()) {</span>
+<span class="fc" id="L108">				query += &quot;where username = '&quot; + username + &quot;'&quot;;</span>
+			}
+<span class="fc" id="L110">			ResultSet result = statement.executeQuery(query);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">			while (result.next()) {</span>
+<span class="fc" id="L112">				userList.add(new UserDetails(result.getString(1), result.getString(2), result.getString(4),</span>
+<span class="fc" id="L113">						result.getLong(5)));</span>
+			}
+<span class="fc" id="L115">			conn.close();</span>
+<span class="pc" id="L116">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L118">		return userList;</span>
+	}
+
+	public UserDetails viewProfile(String username) {
+
+<span class="fc" id="L123">		UserDetails user = null;</span>
+<span class="fc" id="L124">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L126">			PreparedStatement prepareStatement = conn.prepareStatement(&quot;select * from user_details where username = ?&quot;);</span>
+<span class="fc" id="L127">			prepareStatement.setString(1, username);</span>
+<span class="fc" id="L128">			ResultSet result = prepareStatement.executeQuery();</span>
+<span class="fc" id="L129">			result.next();</span>
+<span class="fc" id="L130">			user = new UserDetails(result.getString(1), result.getString(2), result.getString(3), result.getString(4),</span>
+<span class="fc" id="L131">					result.getLong(5), result.getLong(6), result.getString(7), result.getInt(8), result.getString(9),</span>
+<span class="fc" id="L132">					result.getString(10), result.getString(11), result.getString(12));</span>
+<span class="fc" id="L133">			conn.close();</span>
+<span class="pc" id="L134">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L136">		return user;</span>
+	}
+
+	public String getPassword(String username) {
+
+<span class="fc" id="L141">		String password = &quot;&quot;;</span>
+<span class="fc" id="L142">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L144">			PreparedStatement prepareStatement = conn.prepareStatement(&quot;select * from credentials where username = ?&quot;);</span>
+<span class="fc" id="L145">			prepareStatement.setString(1, username);</span>
+<span class="fc" id="L146">			ResultSet result = prepareStatement.executeQuery();</span>
+<span class="fc" id="L147">			result.next();</span>
+<span class="fc" id="L148">			password = result.getString(2);</span>
+<span class="fc" id="L149">			conn.close();</span>
+<span class="pc" id="L150">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L152">		return password;</span>
+	}
+
+	public boolean updateUserDetails(UserDetails userDetails, Credentials credentials) {
+
+<span class="fc" id="L157">		boolean isValid = false;</span>
+<span class="fc" id="L158">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L160">			PreparedStatement prepareStatement1 = conn</span>
+<span class="fc" id="L161">					.prepareStatement(&quot;update credentials set password = ? where username= ?&quot;);</span>
+<span class="fc" id="L162">			prepareStatement1.setString(2, credentials.getUsername());</span>
+<span class="fc" id="L163">			prepareStatement1.setString(1, credentials.getPassword());</span>
+<span class="fc" id="L164">			int row1 = prepareStatement1.executeUpdate();</span>
+<span class="fc" id="L165">			PreparedStatement prepareStatement3 = conn.prepareStatement(</span>
+<span class="fc" id="L166">					&quot;update user_details set firstname = ?, middlename =?, lastname = ?, uta_id = ?, phone = ?, email = ?, numeric_address = ?, street_address = ?, city = ?, state = ?, zipcode = ? where username = ?&quot;);</span>
+<span class="fc" id="L167">			prepareStatement3.setString(12, userDetails.getUsername());</span>
+<span class="fc" id="L168">			prepareStatement3.setString(1, userDetails.getFirstname());</span>
+<span class="fc" id="L169">			prepareStatement3.setString(2, userDetails.getMiddlename());</span>
+<span class="fc" id="L170">			prepareStatement3.setString(3, userDetails.getLastname());</span>
+<span class="fc" id="L171">			prepareStatement3.setLong(4, userDetails.getUtaId());</span>
+<span class="fc" id="L172">			prepareStatement3.setLong(5, userDetails.getPhone());</span>
+<span class="fc" id="L173">			prepareStatement3.setString(6, userDetails.getEmail());</span>
+<span class="fc" id="L174">			prepareStatement3.setLong(7, userDetails.getNumericAddress());</span>
+<span class="fc" id="L175">			prepareStatement3.setString(8, userDetails.getStreetAddress());</span>
+<span class="fc" id="L176">			prepareStatement3.setString(9, userDetails.getCity());</span>
+<span class="fc" id="L177">			prepareStatement3.setString(10, userDetails.getState());</span>
+<span class="fc" id="L178">			prepareStatement3.setString(11, userDetails.getZipcode());</span>
+<span class="fc" id="L179">			int row3 = prepareStatement3.executeUpdate();</span>
+<span class="fc" id="L180">			isValid = true;</span>
+<span class="fc" id="L181">			conn.commit();</span>
+<span class="fc" id="L182">			conn.close();</span>
+<span class="pc" id="L183">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L185">		return isValid;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

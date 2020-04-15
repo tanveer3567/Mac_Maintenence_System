@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>UtilFunctions.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">functions</a> &gt; <a href="index.source.html" class="el_package">MAC_Maintenance_System</a> &gt; <span class="el_source">UtilFunctions.java</span></div><h1>UtilFunctions.java</h1><pre class="source lang-java linenums">package MAC_Maintenance_System;
+
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
+
+<span class="fc" id="L17">public class UtilFunctions {</span>
+
+	
+	public void takeScreenShot(WebDriver driver, String screenshotName) {
+
+<span class="fc" id="L22">		File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);</span>
+		try {
+<span class="fc" id="L24">			FileUtils.copyFile(source, new File(&quot;./Screenshots/&quot; + screenshotName + &quot;.png&quot;));</span>
+<span class="fc" id="L25">			Thread.sleep(1_000);</span>
+<span class="pc" id="L26">		} catch (IOException | InterruptedException e) {</span>
+<span class="nc" id="L27">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L29">	}</span>
+	
+	public void Register(WebDriver driver, Properties prop, String username, String password, String role, String firstname, String middlename, String lastname,
+			String utaId, String phone, String email, String numericAddress, String streetAddress, String city,
+			String state, String zipcode, String screenshotname) throws InterruptedException
+	{
+		// Provide Username
+<span class="fc" id="L36">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Username&quot;))).clear();</span>
+<span class="fc" id="L37">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Username&quot;))).sendKeys(username);</span>
+	    // Provide password
+<span class="fc" id="L39">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Password&quot;))).clear();</span>
+<span class="fc" id="L40">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Password&quot;))).sendKeys(password);</span>
+	    // Provide role
+<span class="fc" id="L42">	    new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Role&quot;)))).selectByVisibleText(role);</span>
+	    // Provide firstname
+<span class="fc" id="L44">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Firstname&quot;))).clear();</span>
+<span class="fc" id="L45">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Firstname&quot;))).sendKeys(firstname);</span>
+	    // Provide middleName
+<span class="fc" id="L47">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Middlename&quot;))).clear();</span>
+<span class="fc" id="L48">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Middlename&quot;))).sendKeys(middlename);</span>
+	    // Provide lastname
+<span class="fc" id="L50">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Lastname&quot;))).clear();</span>
+<span class="fc" id="L51">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Lastname&quot;))).sendKeys(lastname);</span>
+	    // Provide utaId
+<span class="fc" id="L53">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_UTAId&quot;))).clear();</span>
+<span class="fc" id="L54">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_UTAId&quot;))).sendKeys(utaId);</span>
+	    // Provide phone
+<span class="fc" id="L56">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Phone&quot;))).clear();</span>
+<span class="fc" id="L57">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Phone&quot;))).sendKeys(phone);</span>
+	    // Provide email
+<span class="fc" id="L59">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Email&quot;))).clear();</span>
+<span class="fc" id="L60">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Email&quot;))).sendKeys(email);</span>
+	    // Provide numericAddress
+<span class="fc" id="L62">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_NumericAddress&quot;))).clear();</span>
+<span class="fc" id="L63">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_NumericAddress&quot;))).sendKeys(numericAddress);</span>
+	    // Provide StreetAddress
+<span class="fc" id="L65">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_StreetAddress&quot;))).clear();</span>
+<span class="fc" id="L66">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_StreetAddress&quot;))).sendKeys(streetAddress);</span>
+	    // Provide city
+<span class="fc" id="L68">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_City&quot;))).clear();</span>
+<span class="fc" id="L69">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_City&quot;))).sendKeys(city);</span>
+	    // Provide State
+<span class="fc" id="L71">	    new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_StateAdmin&quot;)))).selectByVisibleText(state);</span>
+	    // Provide zipcode
+<span class="fc" id="L73">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Zipcode&quot;))).clear();</span>
+<span class="fc" id="L74">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Zipcode&quot;))).sendKeys(zipcode);</span>
+	    // Click on Login Button
+<span class="fc" id="L76">	    driver.findElement(By.xpath(prop.getProperty(&quot;Button_SignUp_Submit&quot;))).click();	</span>
+<span class="fc" id="L77">	    takeScreenShot(driver, screenshotname);</span>
+<span class="fc" id="L78">	}</span>
+	
+	public void verifyRegistrationErrorMessages(WebDriver driver, Properties prop, String usernameError, String passwordError, String firstnameError, String middlenameError,
+			String lastnameError, String utaIdError, String phoneError, String emailError, String numericAddressError,
+			String streetAddressError, String cityError,String zipcodeError, String snapShotName) throws InterruptedException
+	{
+		try {
+<span class="fc" id="L85">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_UsernameError&quot;))).getAttribute(&quot;value&quot;).equals(usernameError));</span>
+<span class="fc" id="L86">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_PasswordError&quot;))).getAttribute(&quot;value&quot;).equals(passwordError));</span>
+<span class="fc" id="L87">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_FirstnameError&quot;))).getAttribute(&quot;value&quot;).equals(firstnameError));</span>
+<span class="fc" id="L88">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_LastnameError&quot;))).getAttribute(&quot;value&quot;).equals(lastnameError));</span>
+<span class="fc" id="L89">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_UTAIdError&quot;))).getAttribute(&quot;value&quot;).equals(utaIdError));</span>
+<span class="fc" id="L90">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_PhoneError&quot;))).getAttribute(&quot;value&quot;).equals(phoneError));</span>
+<span class="fc" id="L91">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_EmailError&quot;))).getAttribute(&quot;value&quot;).equals(emailError));</span>
+<span class="fc" id="L92">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_StreetAddressError&quot;))).getAttribute(&quot;value&quot;).equals(streetAddressError));</span>
+<span class="fc" id="L93">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_CityError&quot;))).getAttribute(&quot;value&quot;).equals(cityError));</span>
+<span class="fc" id="L94">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_SignUp_ZipcodeError&quot;))).getAttribute(&quot;value&quot;).equals(zipcodeError));</span>
+<span class="fc" id="L95">		} catch (NoSuchElementException e) {}		</span>
+<span class="fc" id="L96">	}</span>
+	
+
+	public void Login(WebDriver driver, Properties prop, String repairer_login_username, String repairer_login_password, String screenshotname) throws InterruptedException {
+
+		// click on Login Link
+<span class="fc" id="L102">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Login&quot;))).click();</span>
+		//		Thread.sleep(500);
+		// Provide Username
+<span class="fc" id="L105">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_username&quot;))).clear();</span>
+<span class="fc" id="L106">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_username&quot;))).sendKeys(repairer_login_username);</span>
+		//	    Thread.sleep(500);
+		// Provide Password
+<span class="fc" id="L109">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_password&quot;))).clear();</span>
+<span class="fc" id="L110">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_password&quot;))).sendKeys(repairer_login_password);</span>
+<span class="fc" id="L111">		Thread.sleep(500);</span>
+		// Click on Login Button
+<span class="fc" id="L113">		takeScreenShot(driver, screenshotname + &quot;BeforeLogin&quot;);</span>
+<span class="fc" id="L114">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Login_submit&quot;))).click();	</span>
+<span class="fc" id="L115">		takeScreenShot(driver, screenshotname + &quot;AfterLogin&quot;);</span>
+<span class="fc" id="L116">		Thread.sleep(500);</span>
+<span class="fc" id="L117">	}</span>
+	
+	public void verifyLoginErrorMessages(WebDriver driver, Properties prop, String usernameError, String PasswordError, String snapShotName) throws InterruptedException {	
+		try {
+<span class="fc" id="L121">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_Login_Username_Error&quot;))).getAttribute(&quot;value&quot;).equals(usernameError));</span>
+<span class="fc" id="L122">			assertTrue(driver.findElement(By.id(prop.getProperty(&quot;Txt_Login_Password_Error&quot;))).getAttribute(&quot;value&quot;).equals(PasswordError));</span>
+<span class="fc" id="L123">		} catch (NoSuchElementException e) {</span>
+			
+		}
+<span class="fc" id="L126">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

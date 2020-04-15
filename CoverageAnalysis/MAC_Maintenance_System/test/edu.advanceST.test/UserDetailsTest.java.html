@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>UserDetailsTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.test</a> &gt; <span class="el_source">UserDetailsTest.java</span></div><h1>UserDetailsTest.java</h1><pre class="source lang-java linenums">package edu.advanceST.test;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.Calendar;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import edu.advanceST.model.UserDetails;
+import edu.advanceST.model.UserDetailsError;
+import junitparams.FileParameters;
+import junitparams.JUnitParamsRunner;
+
+@RunWith(JUnitParamsRunner.class)
+<span class="fc" id="L18">public class UserDetailsTest {</span>
+
+	private UserDetails userDetails;
+	private Calendar c;
+
+	@Before
+	public void setUp() throws Exception {
+
+<span class="fc" id="L26">		c = Calendar.getInstance();</span>
+<span class="fc" id="L27">		c.set(Calendar.HOUR, 0);</span>
+<span class="fc" id="L28">		c.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L29">		c.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L30">		c.set(Calendar.MILLISECOND, 0);</span>
+
+<span class="fc" id="L32">		userDetails = new UserDetails();</span>
+<span class="fc" id="L33">		userDetails.setUsername(&quot;user123&quot;);</span>
+<span class="fc" id="L34">		userDetails.setFirstname(&quot;User&quot;);</span>
+<span class="fc" id="L35">		userDetails.setLastname(&quot;Userser&quot;);</span>
+<span class="fc" id="L36">		userDetails.setMiddlename(&quot;serser&quot;);</span>
+<span class="fc" id="L37">		userDetails.setPhone(9102182817L);</span>
+<span class="fc" id="L38">		userDetails.setUtaId(1001843892L);</span>
+<span class="fc" id="L39">		userDetails.setEmail(&quot;userser@gmail.com&quot;);</span>
+<span class="fc" id="L40">		userDetails.setNumericAddress(999);</span>
+<span class="fc" id="L41">		userDetails.setStreetAddress(&quot;Greek row&quot;);</span>
+<span class="fc" id="L42">		userDetails.setCity(&quot;Arlington&quot;);</span>
+<span class="fc" id="L43">		userDetails.setState(&quot;Texas&quot;);</span>
+<span class="fc" id="L44">		userDetails.setZipcode(&quot;76010&quot;);</span>
+
+<span class="fc" id="L46">		new UserDetails(&quot;user123&quot;, &quot;User&quot;, &quot;serser&quot;, 1001843892L);</span>
+<span class="fc" id="L47">		new UserDetails(&quot;user123&quot;, &quot;User&quot;, &quot;serser&quot;, &quot;Userser&quot;, 1001843892L, 9102182817L, &quot;userser@gmail.com&quot;, 999,</span>
+<span class="fc" id="L48">				&quot;Greek row&quot;, &quot;Arlington&quot;, &quot;Texas&quot;, &quot;76010&quot;);</span>
+
+<span class="fc" id="L50">	}</span>
+
+	@Test
+	@FileParameters(&quot;test/edu/advanceST/test/UserDetailsTestCases.csv&quot;)
+	public void testCredentials(int tcNo, String username, String firstname, String middlename, String lastname,
+			String utaId, String phone, String email, String numericAddress, String streetAddress, String city,
+			String state, String zipcode, String usernameError, String firstnameError, String middlenameError,
+			String lastnameError, String utaIdError, String phoneError, String emailError, String numericAddressError,
+			String streetAddressError, String cityError, String stateError, String zipcodeError) {
+
+<span class="fc" id="L60">		UserDetailsError error = UserDetails.validate(username, firstname, middlename, lastname, utaId, phone, email,</span>
+<span class="fc" id="L61">				numericAddress, streetAddress, city, state, zipcode);</span>
+<span class="fc" id="L62">		assertEquals(usernameError, (error.getUsernameError()));</span>
+<span class="fc" id="L63">		assertEquals(firstnameError, (error.getFirstnameError()));</span>
+<span class="fc" id="L64">		assertEquals(lastnameError, (error.getLastnameError()));</span>
+<span class="fc" id="L65">		assertEquals(utaIdError, (error.getUtaIdError()));</span>
+<span class="fc" id="L66">		assertEquals(phoneError, (error.getPhoneError()));</span>
+<span class="fc" id="L67">		assertEquals(emailError, (error.getEmailError()));</span>
+<span class="fc" id="L68">		assertEquals(streetAddressError, (error.getStreetAddressError()));</span>
+<span class="fc" id="L69">		assertEquals(cityError, (error.getCityError()));</span>
+<span class="fc" id="L70">		assertEquals(zipcodeError, (error.getZipcodeError()));</span>
+<span class="fc" id="L71">	}</span>
+
+	@After
+	public void tearDown() throws Exception {
+
+<span class="fc" id="L76">		assertEquals(userDetails.getUsername(), &quot;user123&quot;);</span>
+<span class="fc" id="L77">		assertEquals(userDetails.getFirstname(), &quot;User&quot;);</span>
+<span class="fc" id="L78">		assertEquals(userDetails.getLastname(), &quot;Userser&quot;);</span>
+<span class="fc" id="L79">		assertEquals(userDetails.getMiddlename(), &quot;serser&quot;);</span>
+<span class="fc" id="L80">		assertEquals(userDetails.getPhone(), 9102182817L);</span>
+<span class="fc" id="L81">		assertEquals(userDetails.getUtaId(), 1001843892L);</span>
+<span class="fc" id="L82">		assertEquals(userDetails.getEmail(), &quot;userser@gmail.com&quot;);</span>
+<span class="fc" id="L83">		assertEquals(userDetails.getNumericAddress(), 999);</span>
+<span class="fc" id="L84">		assertEquals(userDetails.getStreetAddress(), &quot;Greek row&quot;);</span>
+<span class="fc" id="L85">		assertEquals(userDetails.getCity(), &quot;Arlington&quot;);</span>
+<span class="fc" id="L86">		assertEquals(userDetails.getState(), &quot;Texas&quot;);</span>
+<span class="fc" id="L87">		assertEquals(userDetails.getZipcode(), &quot;76010&quot;);</span>
+<span class="fc" id="L88">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

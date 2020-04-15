@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>FacilityController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.controllers</a> &gt; <span class="el_source">FacilityController.java</span></div><h1>FacilityController.java</h1><pre class="source lang-java linenums">package edu.advanceST.controllers;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.TreeMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import edu.advanceST.data.FacilityDAO;
+import edu.advanceST.data.ReservationDao;
+import edu.advanceST.model.FacilityDetails;
+import edu.advanceST.model.FacilityDetailsError;
+
+@WebServlet(urlPatterns = { &quot;/addFacility&quot;, &quot;/searchFacility&quot;, &quot;/viewFacility&quot; })
+<span class="fc" id="L22">public class FacilityController extends HttpServlet {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc bfc" id="L29" title="All 2 branches covered.">		if (request.getServletPath().equalsIgnoreCase(&quot;/addFacility&quot;)) {</span>
+<span class="fc" id="L30">			getServletContext().getRequestDispatcher(&quot;/addfacility.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/viewFacility&quot;)) {</span>
+<span class="fc" id="L32">			FacilityDetails facility = new FacilityDAO()</span>
+<span class="fc" id="L33">					.getSpecificFacilitiy(String.valueOf(request.getParameter(&quot;name&quot;)));</span>
+<span class="fc" id="L34">			request.setAttribute(&quot;facility&quot;, facility);</span>
+<span class="fc" id="L35">			getServletContext().getRequestDispatcher(&quot;/viewfacility.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L36">		} else {</span>
+<span class="fc" id="L37">			getServletContext().getRequestDispatcher(&quot;/searchFacility.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L39">	}</span>
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		if (request.getServletPath().equalsIgnoreCase(&quot;/addFacility&quot;)) {</span>
+<span class="fc" id="L45">			postAddfacility(request, response);</span>
+<span class="fc" id="L46">		} else {</span>
+<span class="fc" id="L47">			postSearchFacility(request, response);</span>
+		}
+<span class="fc" id="L49">	}</span>
+
+	private void postAddfacility(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+<span class="fc" id="L53">		Object object = getFacilityForm(request);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">		if (object instanceof FacilityDetailsError) {</span>
+<span class="fc" id="L55">			request.setAttribute(&quot;error&quot;, (FacilityDetailsError) object);</span>
+<span class="fc" id="L56">		} else {</span>
+<span class="fc" id="L57">			FacilityDetails facilityDetails = (FacilityDetails) object;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">			if (new FacilityDAO().checkFacility(facilityDetails.getName())) {</span>
+<span class="fc" id="L59">				request.setAttribute(&quot;message&quot;, &quot;Facility already exists&quot;);</span>
+<span class="fc" id="L60">			} else {</span>
+<span class="fc" id="L61">				request.setAttribute(&quot;message&quot;, &quot;Facility added successfully&quot;);</span>
+<span class="fc" id="L62">				new FacilityDAO().addFacilitydetails((FacilityDetails) object);</span>
+			}
+		}
+<span class="fc" id="L65">		getServletContext().getRequestDispatcher(&quot;/addfacility.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L66">	}</span>
+
+	private void postSearchFacility(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L71">		String facilityType = request.getParameter(&quot;facilityType&quot;);</span>
+<span class="fc" id="L72">		String duration = request.getParameter(&quot;duration&quot;);</span>
+<span class="fc" id="L73">		String venue = request.getParameter(&quot;venue&quot;);</span>
+<span class="fc" id="L74">		String startTime = request.getParameter(&quot;startTime&quot;);</span>
+<span class="fc" id="L75">		String endTime = request.getParameter(&quot;endTime&quot;);</span>
+<span class="fc" id="L76">		ArrayList&lt;FacilityDetails&gt; facDet = new ArrayList&lt;FacilityDetails&gt;();</span>
+<span class="fc" id="L77">		String sDate = request.getParameter(&quot;date&quot;);</span>
+<span class="fc" id="L78">		Date date = null;</span>
+		try {
+<span class="fc" id="L80">			date = new SimpleDateFormat(&quot;YYYY-MM-DD&quot;).parse(sDate);</span>
+<span class="fc" id="L81">		} catch (ParseException e) {</span>
+<span class="fc" id="L82">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L84">		FacilityDetailsError error = FacilityDetails.validate(date, startTime, endTime);</span>
+<span class="fc bfc" id="L85" title="All 4 branches covered.">		if (!error.getDateError().isEmpty() || !error.getEndTimeError().isEmpty()) {</span>
+<span class="fc" id="L86">			request.setAttribute(&quot;error&quot;, error);</span>
+<span class="fc" id="L87">		} else {</span>
+<span class="fc" id="L88">			ArrayList&lt;FacilityDetails&gt; temp = new FacilityDAO().searchFacility(facilityType, duration, venue);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">			for (FacilityDetails facility : temp) {</span>
+<span class="fc" id="L90">				TreeMap&lt;Double, Boolean&gt; report = new ReservationDao().getAvailableFacilityReport(facility.getName(),</span>
+<span class="fc" id="L91">						date);</span>
+<span class="fc" id="L92">				double sTime = Integer.valueOf(startTime);</span>
+<span class="fc" id="L93">				double eTime = Integer.valueOf(endTime);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">				while (sTime &lt; eTime) {</span>
+<span class="fc" id="L95">					sTime += 0.5;</span>
+				}
+<span class="fc" id="L97">				facDet.add(facility);</span>
+			}
+<span class="fc" id="L99">			request.setAttribute(&quot;facDet&quot;, facDet);</span>
+		}
+<span class="fc" id="L101">		getServletContext().getRequestDispatcher(&quot;/searchFacility.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L102">	}</span>
+
+	private Object getFacilityForm(HttpServletRequest request) {
+
+<span class="fc" id="L106">		String facilityType = request.getParameter(&quot;facilityType&quot;);</span>
+<span class="fc" id="L107">		String name = request.getParameter(&quot;name&quot;);</span>
+<span class="fc" id="L108">		String interval = request.getParameter(&quot;interval&quot;);</span>
+<span class="fc" id="L109">		String duration = request.getParameter(&quot;duration&quot;);</span>
+<span class="fc" id="L110">		String venue = request.getParameter(&quot;venue&quot;);</span>
+<span class="fc" id="L111">		FacilityDetailsError error = FacilityDetails.validate(name);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		if (error.getNameError().isEmpty()) {</span>
+<span class="fc" id="L113">			return new FacilityDetails(facilityType, name, interval, duration, venue);</span>
+		} else {
+<span class="fc" id="L115">			return error;</span>
+		}
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

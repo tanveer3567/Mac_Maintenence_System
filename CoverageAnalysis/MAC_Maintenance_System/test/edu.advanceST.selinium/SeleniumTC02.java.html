@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>SeleniumTC02.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.selinium</a> &gt; <span class="el_source">SeleniumTC02.java</span></div><h1>SeleniumTC02.java</h1><pre class="source lang-java linenums">package edu.advanceST.selinium;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.io.FileInputStream;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+
+import MAC_Maintenance_System.UtilFunctions;
+import junitparams.FileParameters;
+import junitparams.JUnitParamsRunner;
+
+@RunWith(JUnitParamsRunner.class)
+<span class="fc" id="L28">public class SeleniumTC02 extends MAC_Maintenance_System.FacilityManagerFunctions {</span>
+
+<span class="fc" id="L30">	private boolean acceptNextAlert = true;</span>
+<span class="fc" id="L31">	private StringBuffer verificationErrors = new StringBuffer();</span>
+	public static String sAppURL, sSharedUIMapPath, username, password;
+<span class="fc" id="L33">	private UtilFunctions util = new UtilFunctions();</span>
+
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L37">		System.setProperty(&quot;webdriver.chrome.driver&quot;, &quot;C:/chromedriver_win32/chromedriver.exe&quot;);</span>
+<span class="fc" id="L38">		driver = new ChromeDriver();</span>
+<span class="fc" id="L39">		prop = new Properties();</span>
+<span class="fc" id="L40">		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);</span>
+<span class="fc" id="L41">		prop.load(new FileInputStream(&quot;./configuration/MAC_Configuration.properties&quot;));</span>
+<span class="fc" id="L42">		sAppURL = prop.getProperty(&quot;sAppURL&quot;);</span>
+<span class="fc" id="L43">		sSharedUIMapPath = prop.getProperty(&quot;SharedUIMap&quot;);</span>
+<span class="fc" id="L44">		prop.load(new FileInputStream(&quot;./Login/Login.properties&quot;));</span>
+<span class="fc" id="L45">		username = prop.getProperty(&quot;fm_login_username&quot;);</span>
+<span class="fc" id="L46">		password = prop.getProperty(&quot;fm_login_password&quot;);</span>
+		// Load Shared UI Map
+<span class="fc" id="L48">		prop.load(new FileInputStream(sSharedUIMapPath));</span>
+		// util = new UtilFunctions(driver, prop);
+<span class="fc" id="L50">	}</span>
+
+	@Test
+	@FileParameters(value = &quot;excel/fmRegistration.csv&quot;)
+	public void testResgistration(String username, String password, String role, String firstname, String middlename,
+			String lastname, String utaId, String phNumber, String email, String numericAddress, String streetAddress,
+			String city, String state, String zipcode) throws Exception {
+
+<span class="fc" id="L58">		driver.get(sAppURL);</span>
+<span class="fc" id="L59">		facilityManagerRegistration(username, password, role, firstname, middlename, lastname, utaId, phNumber, email,</span>
+<span class="fc" id="L60">				numericAddress, streetAddress, city, state, zipcode);</span>
+<span class="fc" id="L61">	}</span>
+
+	@Test
+	@FileParameters(value = &quot;excel/fmLogin.csv&quot;)
+	public void testLogin(String username, String password) throws Exception {
+
+<span class="fc" id="L67">		driver.get(sAppURL);</span>
+		//facilityManagerLogin(username, password);
+<span class="fc" id="L69">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L70">		String screenShotName = methodName + &quot; UserLogin test case &quot;;</span>
+<span class="fc" id="L71">		util.Login(driver, prop, username, password, screenShotName);</span>
+		
+<span class="fc" id="L73">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Home_Logout&quot;))).click();</span>
+<span class="fc" id="L74">	}</span>
+
+	@Test
+	@FileParameters(value = &quot;excel/searchUnassignedMar.csv&quot;)
+	public void testSearchUnassignedMar(String marNumber, String facilityType, String name, String urgency,
+			String description, String date, String reportedBy) throws Exception {
+<span class="fc" id="L80">		driver.get(sAppURL);</span>
+<span class="fc" id="L81">		facilityManagerLogin(username, password);</span>
+<span class="fc" id="L82">		facilityManagerSearchUnassignedMar();</span>
+<span class="fc" id="L83">		verifyMars(marNumber, facilityType, name, urgency, description, date, reportedBy);</span>
+<span class="fc" id="L84">	}</span>
+
+	@Test
+	@FileParameters(value = &quot;excel/searchAssignedMarByDate.csv&quot;)
+	public void testSearchAssignedMarByDate(String assignedDate, String marNumber, String facilityType, String name,
+			String urgency, String description, String date, String reportedBy) throws Exception {
+<span class="fc" id="L90">		driver.get(sAppURL);</span>
+<span class="fc" id="L91">		facilityManagerLogin(username, password);</span>
+<span class="fc" id="L92">		facilityManagerSearchAssignedMarByDate(assignedDate);</span>
+		try {
+<span class="nc" id="L94">			verifyMars(marNumber, facilityType, name, urgency, description, date, reportedBy);</span>
+<span class="pc" id="L95">		} catch (NoSuchElementException e) {</span>
+		} finally {
+<span class="fc" id="L97">			driver.findElement(By.xpath(&quot;html/body/a[2]&quot;)).click();</span>
+<span class="fc" id="L98">			driver.findElement(By.xpath(&quot;html/body/a[1]&quot;)).click();</span>
+		}
+
+<span class="fc" id="L101">	}</span>
+
+	@Test
+	@FileParameters(value = &quot;excel/reviewUnassignedMar.csv&quot;)
+	public void reviewUnassignedMar(String expectedMarNumberHeader, String expectedMarNumber,
+			String expectedFacilirtTypeHeader, String expectedFacilityType, String expectedNameHeader,
+			String expectedName, String expectedUrgencyHeader, String expectedUrgnency, String expectedDateHeader,
+			String expectedDate, String expectedDescriptionHeader, String expectedDescription,
+			String expectedReportedByHeader, String expectedReportedBy, String expectedAssignedToHeader,
+			String expectedassignedTo, String expectedAssignedDateHeader, String expectedAssignedDate,
+			String expectedEtrHeader, String expectedEtr) throws InterruptedException {
+
+<span class="fc" id="L113">		driver.get(sAppURL);</span>
+<span class="fc" id="L114">		facilityManagerLogin(username, password);</span>
+<span class="fc" id="L115">		facilityManagerSearchUnassignedMar();</span>
+<span class="fc" id="L116">		facilityMangerReviewUnassignedMar(expectedMarNumberHeader, expectedMarNumber, expectedFacilirtTypeHeader,</span>
+<span class="fc" id="L117">				expectedFacilityType, expectedNameHeader, expectedName, expectedUrgencyHeader, expectedUrgnency,</span>
+<span class="fc" id="L118">				expectedDateHeader, expectedDate, expectedDescriptionHeader, expectedDescription,</span>
+<span class="fc" id="L119">				expectedReportedByHeader, expectedReportedBy, expectedAssignedToHeader, expectedassignedTo,</span>
+<span class="fc" id="L120">				expectedAssignedDateHeader, expectedAssignedDate, expectedEtrHeader, expectedEtr);</span>
+<span class="fc" id="L121">	}</span>
+	
+	@Test
+	@FileParameters(value = &quot;excel/addFacility.csv&quot;)
+	public void addFacility(String testCaseNo, String facilityType, String name, String interval, String duration,
+			String venue, String nameError1, String nameError2) throws Exception {
+
+<span class="fc" id="L128">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L129">		driver.get(sAppURL);</span>
+<span class="fc" id="L130">		facilityManagerLogin(username, password);</span>
+<span class="fc" id="L131">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_Add_facility&quot;))).click();</span>
+<span class="fc" id="L132">		String screenShotName = methodName + &quot; addFacility test case &quot; + testCaseNo;</span>
+<span class="fc" id="L133">		AddFacility(driver,testCaseNo, facilityType, name, interval, duration, venue, screenShotName);</span>
+		//Thread.sleep(500);
+<span class="fc" id="L135">		verifyAddFacility(driver, nameError1, nameError2, (methodName + &quot; verifyaddFacilityErrorMessages test case &quot; + testCaseNo));</span>
+<span class="fc" id="L136">		Thread.sleep(500);</span>
+<span class="fc" id="L137">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Btn_Clk_Home&quot;))).click();</span>
+<span class="fc" id="L138">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_FacilityManagerHome_Logout&quot;))).click();</span>
+<span class="fc" id="L139">	}</span>
+	
+	@Test
+	@FileParameters(&quot;excel/viewSpecificFacility.csv&quot;)
+	public void viewSpecificFacility(int testCaseNumber, String facilityType, String duration, String venue, String date, String startTime, String endTime,
+			String row1, String row2, String row3, String row4, String row5,
+			String data1, String data2, String data3, String data4, String data5) throws Exception {
+<span class="fc" id="L146">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+		//String screenShotName = methodName + &quot; view Specific Facility &quot; + testCaseNumber;
+<span class="fc" id="L148">		driver.get(sAppURL);</span>
+<span class="fc" id="L149">		facilityManagerLogin(username, password);</span>
+		// Button click search facility
+<span class="fc" id="L151">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_Search_Facility&quot;))).click();</span>
+		// Values inserted to view a specific facility
+<span class="fc" id="L153">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_specific_facility_FacilityType&quot;)))).selectByVisibleText(facilityType);</span>
+<span class="fc" id="L154">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_specific_facility_Duration&quot;)))).selectByVisibleText(duration);</span>
+<span class="fc" id="L155">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_specific_facility_Venue&quot;)))).selectByVisibleText(venue);</span>
+<span class="fc" id="L156">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_specific_facility_Date&quot;))).clear();</span>
+<span class="fc" id="L157">	    driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_specific_facility_Date&quot;))).sendKeys(date);</span>
+<span class="fc" id="L158">	    new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_specific_facility_StartTime&quot;)))).selectByVisibleText(startTime);</span>
+<span class="fc" id="L159">	    new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view__specific_facility_EndTime&quot;)))).selectByVisibleText(endTime);</span>
+	    //Thread.sleep(500);
+<span class="fc" id="L161">	    driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_specific_facility_submit&quot;))).click();</span>
+<span class="fc" id="L162">	    driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_specific_facility_1st_view&quot;))).click();</span>
+<span class="fc" id="L163">		verifyHeadersSpecific(driver, &quot;view_specific_facility_FacilityType_Title&quot;, row1,</span>
+<span class="fc" id="L164">				&quot;view_specific_facility_Name_Title&quot;, row2, &quot;view_specific_facility_Interval_Title&quot;, row3,</span>
+<span class="fc" id="L165">				&quot;view_specific_facility_Duration_Title&quot;, row4, &quot;view_specific_facility_Venue_Title&quot;, row5, </span>
+<span class="fc" id="L166">				methodName + &quot; verifyHeaders test case &quot; + testCaseNumber);</span>
+<span class="fc" id="L167">		verifyContentsSpecific(driver, &quot;view_specific_facility_FacilityType_Value&quot;, data1,</span>
+<span class="fc" id="L168">				&quot;view_specific_facility_Name_Value&quot;, data2, &quot;view_specific_facility_Interval_Value&quot;, data3,</span>
+<span class="fc" id="L169">				&quot;view_specific_facility_Duration_Value&quot;, data4, &quot;view_specific_facility_Venue_Value&quot;, data5,</span>
+<span class="fc" id="L170">				methodName + &quot; verifyContents test case &quot; + testCaseNumber);</span>
+<span class="fc" id="L171">		Thread.sleep(500);</span>
+<span class="fc" id="L172">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_specific_facility_page_home&quot;))).click(); // home</span>
+<span class="fc" id="L173">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_specific_facility_logout&quot;))).click(); // logout</span>
+<span class="fc" id="L174">		Thread.sleep(500);</span>
+<span class="fc" id="L175">	}</span>
+	
+	
+	@Test
+	@FileParameters(&quot;excel/searchFacility.csv&quot;)
+	public void viewFacility(int testCaseNumber, String facilityType, String date, String startTime, String endTime,
+			String dateError, String endTimeError, String col1, String col2, String col3, String col4, String col5,
+			String data1, String data2, String data3, String data4, String data5) throws Exception {
+<span class="fc" id="L183">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+		//String screenShotName = methodName + &quot; view Specific Facility &quot; + testCaseNumber;
+<span class="fc" id="L185">		driver.get(sAppURL);</span>
+<span class="fc" id="L186">		facilityManagerLogin(username, password);</span>
+		// Button click search facility
+<span class="fc" id="L188">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_facility_search_facility&quot;))).click();</span>
+<span class="fc" id="L189">		inputFacilityDetails(driver, facilityType, date, startTime, endTime, methodName + &quot; verify inputs test case &quot; + testCaseNumber);</span>
+	    //Thread.sleep(500);
+<span class="fc bfc" id="L191" title="All 4 branches covered.">		if (dateError.equals(&quot;&quot;) &amp;&amp; endTimeError.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L192">		verifyHeadersSpecific(driver, &quot;view_facility_FacilityType_Title&quot;, col1,</span>
+<span class="fc" id="L193">				&quot;view_facility_Name_Title&quot;, col2, &quot;view_facility_Interval_Title&quot;, col3,</span>
+<span class="fc" id="L194">				&quot;view_facility_Duration_Title&quot;, col4, &quot;view_facility_Venue_Title&quot;, col5, </span>
+<span class="fc" id="L195">				methodName + &quot; verifyHeaders test case &quot; + testCaseNumber);</span>
+<span class="fc" id="L196">		verifyContentsSpecific(driver, &quot;view_facility_FacilityType_1stRow_value&quot;, data1,</span>
+<span class="fc" id="L197">				&quot;view_facility_Name_1stRow_value&quot;, data2, &quot;view_facility_Interval_1stRow_value&quot;, data3,</span>
+<span class="fc" id="L198">				&quot;view_facility_Duration_1stRow_value&quot;, data4, &quot;view_facility_Venue_1stRow_value&quot;, data5,</span>
+<span class="fc" id="L199">				methodName + &quot; verifyContents test case &quot; + testCaseNumber);</span>
+<span class="fc" id="L200">		}</span>
+		else
+<span class="fc" id="L202">			verifyFacilityDetails(driver, dateError, endTimeError, methodName + &quot; verify inputs error test case &quot; + testCaseNumber);</span>
+		
+		//By loadingImage = By.id(&quot;loading image ID&quot;);
+		//WebDriverWait wait = new WebDriverWait(driver, 1000);
+		//wait.until(ExpectedConditions.invisibilityOfElementLocated(loadingImage));
+		//driver.findElement(By.id(prop.getProperty(&quot;Btn_Clk_view_facility_page_home_id&quot;))).click();
+<span class="fc" id="L208">		WebElement element = driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_facility_page_home&quot;)));</span>
+<span class="fc" id="L209">		Actions actions = new Actions(driver);</span>
+<span class="fc" id="L210">		Thread.sleep(500);</span>
+<span class="fc" id="L211">		actions.moveToElement(element).click().perform();</span>
+<span class="fc" id="L212">		Thread.sleep(3_000);</span>
+<span class="fc" id="L213">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_facility_Logout&quot;))).click(); // logout</span>
+<span class="fc" id="L214">	}</span>
+	
+	
+	@Test
+	@FileParameters(value = &quot;excel/assignMar.csv&quot;)
+	public void testAssignMar(String tCaseNum, String assignTo, String date, String etr, String assignedDateError)
+			throws Exception {
+<span class="fc" id="L221">		driver.get(sAppURL);</span>
+<span class="fc" id="L222">		facilityManagerLogin(username, password);</span>
+<span class="fc" id="L223">		facilityManagerSearchUnassignedMar();</span>
+<span class="fc" id="L224">		facilityManagerAssignMar(tCaseNum, assignTo, date, etr);</span>
+		try {
+<span class="fc" id="L226">			assertEquals(assignedDateError, facilityManagerGetAssignedDateError());</span>
+<span class="fc" id="L227">			driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Assign_Mar_Logout&quot;))).click();</span>
+<span class="fc" id="L228">		} catch (NoSuchElementException e) {</span>
+			// Implemented as instructed by Professor - This is for positive scenario, when
+			// we give today's date then selenium moves on to
+			// home page after assigning mar and it can't find assignedDateError field and
+			// throws exception
+<span class="fc" id="L233">			driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Home_Logout&quot;))).click();</span>
+		}
+<span class="fc" id="L235">	}</span>
+
+
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L240">		driver.quit();</span>
+<span class="fc" id="L241">		String verificationErrorString = verificationErrors.toString();</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">		if (!&quot;&quot;.equals(verificationErrorString)) {</span>
+<span class="nc" id="L243">			fail(verificationErrorString);</span>
+		}
+<span class="fc" id="L245">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>RepairerFunctions.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">functions</a> &gt; <a href="index.source.html" class="el_package">MAC_Maintenance_System</a> &gt; <span class="el_source">RepairerFunctions.java</span></div><h1>RepairerFunctions.java</h1><pre class="source lang-java linenums">package MAC_Maintenance_System;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+import edu.advanceST.model.Reservation;
+import edu.advanceST.util.SQLConnection;
+
+<span class="fc" id="L28">public class RepairerFunctions {</span>
+
+<span class="fc" id="L30">	private UtilFunctions util = new UtilFunctions();</span>
+	public WebDriver driver;
+	public Properties prop;
+
+	public void verifyHeaders(WebDriver driver, String header1OnPage, String expectedHeader1Name,String header2OnPage, String expectedHeader2Name,
+			String header3OnPage, String expectedHeader3Name,String header4OnPage, String expectedHeader4Name, 
+			String header5OnPage, String expectedHeader5Name, String header6OnPage, String expectedHeader6Name, String header7OnPage, String expectedHeader7Name, String snapShotName) {
+<span class="fc" id="L37">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header1OnPage))).getText().equals(expectedHeader1Name));</span>
+<span class="fc" id="L38">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header2OnPage))).getText().equals(expectedHeader2Name));</span>
+<span class="fc" id="L39">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header3OnPage))).getText().equals(expectedHeader3Name));</span>
+<span class="fc" id="L40">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header4OnPage))).getText().equals(expectedHeader4Name));</span>
+<span class="fc" id="L41">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header5OnPage))).getText().equals(expectedHeader5Name));</span>
+<span class="fc" id="L42">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header6OnPage))).getText().equals(expectedHeader6Name));</span>
+<span class="fc" id="L43">		assertTrue(driver.findElement(By.xpath(prop.getProperty(header7OnPage))).getText().equals(expectedHeader7Name));</span>
+<span class="fc" id="L44">		util.takeScreenShot(driver, snapShotName);</span>
+		//if (!header5OnPage.equals(&quot;&quot;))
+		//assertTrue(driver.findElement(By.xpath(prop.getProperty(header5OnPage))).getText().equals(expectedHeader5Name));
+		//takeScreenShot(driver,snapShotName);
+<span class="fc" id="L48">	}</span>
+	
+	
+	public void verifyHeadersRes(WebDriver driver, String headerReservationId, String expectedHeaderReservationId,
+			String headerDate, String expectedHeaderDate,
+			String headerStatus, String expectedHeaderStatus) {
+<span class="fc" id="L54">		assertTrue(driver.findElement(By.xpath(prop.getProperty(headerReservationId))).getText().equals(expectedHeaderReservationId));</span>
+<span class="fc" id="L55">		assertTrue(driver.findElement(By.xpath(prop.getProperty(headerDate))).getText().equals(expectedHeaderDate));</span>
+<span class="fc" id="L56">		assertTrue(driver.findElement(By.xpath(prop.getProperty(headerStatus))).getText().equals(expectedHeaderStatus));</span>
+<span class="fc" id="L57">	}</span>
+	
+
+	/* public void verifyContents(WebDriver driver, String col1ValueOnPage, String expectedcol1Value,String col2ValueOnPage, String expectedcol2Value,
+				String col3ValueOnPage, String expectedcol3Value,String col4ValueOnPage, String expectedcol4Value, String snapShotName) {
+		 		assertTrue(driver.findElement(By.xpath(prop.getProperty(col1ValueOnPage))).getText().equals(expectedcol1Value));
+		 		assertTrue(driver.findElement(By.xpath(prop.getProperty(col2ValueOnPage))).getText().equals(expectedcol2Value));
+		 		assertTrue(driver.findElement(By.xpath(prop.getProperty(col3ValueOnPage))).getText().equals(expectedcol3Value));
+		 		assertTrue(driver.findElement(By.xpath(prop.getProperty(col4ValueOnPage))).getText().equals(expectedcol4Value));
+		 		//util.takeScreenShot(snapShotName);
+}*/
+
+	public void verifyContentsSpecific(WebDriver driver, String row1ValueOnpage, String expectedrow1Value, String row2ValueOnpage, String expectedrow2Value, String row3ValueOnpage, String expectedrow3Value, 
+			String row4ValueOnpage, String expectedrow4Value, String row5ValueOnpage, String expectedrow5Value, String row6ValueOnpage, String expectedrow6Value, String row7ValueOnpage, String expectedrow7Value,
+			String row8ValueOnpage, String expectedrow8Value, String row9ValueOnpage, String expectedrow9Value, String row10ValueOnpage, String expectedrow10Value, String snapShotName) {
+		//System.out.println(row1ValueOnpage);
+		//System.out.println(driver.findElement(By.xpath(prop.getProperty(row1ValueOnpage))).getText());
+		//System.out.println(expectedrow1Value);
+<span class="fc" id="L75">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row1ValueOnpage))).getText().equals(expectedrow1Value));</span>
+<span class="fc" id="L76">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row2ValueOnpage))).getText().equals(expectedrow2Value));</span>
+<span class="fc" id="L77">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row3ValueOnpage))).getText().equals(expectedrow3Value));</span>
+<span class="fc" id="L78">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row4ValueOnpage))).getText().equals(expectedrow4Value));</span>
+<span class="fc" id="L79">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row5ValueOnpage))).getText().equals(expectedrow5Value));</span>
+<span class="fc" id="L80">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row6ValueOnpage))).getText().equals(expectedrow6Value));</span>
+<span class="fc" id="L81">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row7ValueOnpage))).getText().equals(expectedrow7Value));</span>
+<span class="fc" id="L82">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row8ValueOnpage))).getText().equals(expectedrow8Value));</span>
+<span class="fc" id="L83">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row9ValueOnpage))).getText().equals(expectedrow9Value));</span>
+<span class="fc" id="L84">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row10ValueOnpage))).getText().equals(expectedrow10Value));</span>
+<span class="fc" id="L85">		util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L86">	}</span>
+
+
+
+	public void verifyHeadersSpecific(WebDriver driver, String row1TitleOnpage, String expectedrow1Title, String row2TitleOnpage, String expectedrow2Title, String row3TitleOnpage, String expectedrow3Title, 
+			String row4TitleOnpage, String expectedrow4Title, String row5TitleOnpage, String expectedrow5Title, String row6TitleOnpage, String expectedrow6Title, String row7TitleOnpage, String expectedrow7Title,
+			String row8TitleOnpage, String expectedrow8Title, String row9TitleOnpage, String expectedrow9Title, String row10TitleOnpage, String expectedrow10Title, String snapShotName) {
+		//System.out.println(driver.findElement(By.xpath(prop.getProperty(row1TitleOnpage))).getText());
+<span class="fc" id="L94">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row1TitleOnpage))).getText().equals(expectedrow1Title));</span>
+<span class="fc" id="L95">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row2TitleOnpage))).getText().equals(expectedrow2Title));</span>
+<span class="fc" id="L96">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row3TitleOnpage))).getText().equals(expectedrow3Title));</span>
+<span class="fc" id="L97">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row4TitleOnpage))).getText().equals(expectedrow4Title));</span>
+<span class="fc" id="L98">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row5TitleOnpage))).getText().equals(expectedrow5Title));</span>
+<span class="fc" id="L99">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row6TitleOnpage))).getText().equals(expectedrow6Title));</span>
+<span class="fc" id="L100">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row7TitleOnpage))).getText().equals(expectedrow7Title));</span>
+<span class="fc" id="L101">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row8TitleOnpage))).getText().equals(expectedrow8Title));</span>
+<span class="fc" id="L102">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row9TitleOnpage))).getText().equals(expectedrow9Title));</span>
+<span class="fc" id="L103">		assertTrue(driver.findElement(By.xpath(prop.getProperty(row10TitleOnpage))).getText().equals(expectedrow10Title));</span>
+<span class="fc" id="L104">		util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L105">	}</span>
+	
+	//Reservation List
+	
+		private static ArrayList&lt;Reservation&gt; ReturnMatchingResList(String uName) {
+<span class="fc" id="L110">			ArrayList&lt;Reservation&gt; ReservationListInDB = new ArrayList&lt;Reservation&gt;();</span>
+
+<span class="fc" id="L112">			Statement stmt = null;</span>
+<span class="fc" id="L113">			Connection conn = SQLConnection.getDBConnection();  </span>
+			try {
+<span class="fc" id="L115">				stmt = conn.createStatement();</span>
+<span class="fc" id="L116">				ResultSet reserveList = stmt.executeQuery(&quot;Select reservation_id, date, status&quot;</span>
+<span class="fc" id="L117">						+ &quot; from reservation where username =&quot; + &quot;\'&quot; + uName + &quot;\' order by reservation_id DESC&quot;);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">				while (reserveList.next()) {</span>
+<span class="fc" id="L119">					Reservation res = new Reservation(); </span>
+<span class="fc" id="L120">					res.setReservationId(reserveList.getInt(&quot;reservation_id&quot;));</span>
+<span class="fc" id="L121">					res.setDate(reserveList.getDate(&quot;date&quot;));</span>
+<span class="fc" id="L122">					res.setStatus(reserveList.getString(&quot;status&quot;));</span>
+<span class="fc" id="L123">					ReservationListInDB.add(res);	</span>
+				}
+<span class="pc" id="L125">			} catch (SQLException e) {}</span>
+<span class="fc" id="L126">			return ReservationListInDB;</span>
+		}
+		
+		private String [][] getReservationListFromDB(int listSize, String uName) throws SQLException { // this method gets the list mar table contents from the DB
+<span class="fc" id="L130">			ArrayList&lt;Reservation&gt; fromDB= ReturnMatchingResList(uName);</span>
+<span class="fc" id="L131">			String [][] arrayDB = new String [listSize - 1][3];</span>
+<span class="fc" id="L132">			System.out.println(arrayDB.length);</span>
+<span class="fc" id="L133">			int i=0;</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">			for (Reservation p:fromDB) {</span>
+<span class="fc" id="L135">				arrayDB[i][0]= Long.toString(p.getReservationId());</span>
+<span class="fc" id="L136">				arrayDB[i][1]=p.getDate().toString();</span>
+<span class="fc" id="L137">				arrayDB[i][2]=p.getStatus();</span>
+<span class="fc" id="L138">				i++;</span>
+			}
+<span class="fc" id="L140">			return arrayDB;</span>
+		}
+
+		private Boolean arraysDiff1 (String [][] array1, String [][] array2) { // this method compares the contents of the two tables
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">			Boolean diff=false || (array1.length!=array2.length);</span>
+<span class="fc" id="L145">			System.out.println(array1.length);</span>
+<span class="fc" id="L146">			System.out.println(array2.length);</span>
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">			for (int i=0;i&lt;array1.length &amp;&amp; !diff;i++) {</span>
+<span class="pc bpc" id="L148" title="2 of 4 branches missed.">				diff  = !array1[i][0].equals(array2[i][0]) || !array1[i][1].equals(array2[i][1]) || </span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">						!array1[i][2].equals(array2[i][2]);</span>
+			}
+<span class="fc" id="L151">			return diff;</span>
+		}
+		
+		private String [][] getResTableContentsFromPage(int listSize) { // this method gets the list mar table contents from the web page
+<span class="fc" id="L155">			String [][] ResArray = new String[listSize - 1][3];</span>
+<span class="fc" id="L156">			int a = 0; </span>
+<span class="fc" id="L157">			int b = 0;</span>
+<span class="fc" id="L158">			List&lt;WebElement&gt; rows= driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;))).findElements(By.tagName(&quot;tr&quot;));</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">			for (int j=2;j &lt;= rows.size();j++) {</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">				for(int i=1;i&lt;=3;i++) {</span>
+<span class="fc" id="L161">					ResArray[a][b] = driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+i+&quot;]&quot;)).getText();</span>
+<span class="fc" id="L162">					b++;</span>
+				}
+<span class="fc" id="L164">				a++;</span>
+<span class="fc" id="L165">				b = 0;</span>
+			}
+<span class="fc" id="L167">			return ResArray;</span>
+		}
+
+	public void ListMyReservation(int testCaseNumber, String methodName, WebDriver driver, 
+				String repairer_login_username, String repairer_login_password, 
+				String col0, String col3, String col6) throws InterruptedException {
+		
+<span class="fc" id="L174">		util.Login(driver, prop, repairer_login_username, repairer_login_password, &quot;Repair List My Reservation&quot;);</span>
+<span class="fc" id="L175">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_List_My_Reservation&quot;))).click();</span>
+<span class="fc" id="L176">		verifyHeadersRes(driver,&quot;Txt_Lst_ResID&quot;,col0,</span>
+<span class="fc" id="L177">				&quot;Txt_Lst_Date&quot;,col3,</span>
+<span class="fc" id="L178">				&quot;Txt_Lst_Status&quot;,col6);</span>
+<span class="fc" id="L179">		WebElement ResTable = driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)));</span>
+<span class="fc" id="L180">		int rows = ResTable.findElements(By.tagName(&quot;tr&quot;)).size(); //find the number of rows in the table including the header</span>
+		
+		try {
+<span class="fc" id="L183">			assertFalse(arraysDiff1(getReservationListFromDB(rows, repairer_login_username),</span>
+<span class="fc" id="L184">					getResTableContentsFromPage(rows)));</span>
+<span class="pc" id="L185">		} catch (SQLException e) {</span>
+<span class="nc" id="L186">			e.printStackTrace();</span>
+		}
+<span class="fc" id="L188">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Cancel_Res_Repairs_Home&quot;))).click();</span>
+<span class="fc" id="L189">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Logout&quot;))).click();</span>
+<span class="fc" id="L190">	}</span>
+	
+	public void RequestReservation(WebDriver driver, String repairer_login_username, String repairer_login_password, 
+			String startTime, String endTime, String startTimeError, String endTimeError, String successMessage, String screenShotName) throws InterruptedException {
+<span class="fc" id="L194">		util.Login(driver, prop, repairer_login_username, repairer_login_password, &quot;Request Repair Reservation&quot;);</span>
+		//Thread.sleep(1000);
+		//Click on the Search User Role link
+<span class="fc" id="L197">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_List_Assigned_MAR&quot;))).click();</span>
+<span class="fc" id="L198">		Thread.sleep(2500);</span>
+
+<span class="fc" id="L200">		List&lt;WebElement&gt; rows= driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_Search_Assign_MAR_Table&quot;))).findElements(By.tagName(&quot;tr&quot;));</span>
+		outerloop:
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">		for (int j=2;j&lt;rows.size();j++) {</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">			for(int i=1;i&lt;=8;i++)</span>
+			{
+<span class="fc" id="L205">				driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_Search_Assign_MAR_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;8&quot;+&quot;]/a&quot;)).click();</span>
+<span class="fc" id="L206">				driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Request_Reservation&quot;))).click();</span>
+				
+<span class="fc" id="L208">				Thread.sleep(2000);</span>
+<span class="fc" id="L209">				util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L210">				new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_Start_Time&quot;)))).selectByVisibleText(startTime);</span>
+<span class="fc" id="L211">				new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_End_Time&quot;)))).selectByVisibleText(endTime);</span>
+<span class="fc" id="L212">				util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L213">				Thread.sleep(2000);</span>
+<span class="fc" id="L214">				driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Reservation_Submit&quot;))).click();</span>
+<span class="fc" id="L215">				assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_StartTime_Error&quot;))).getAttribute(&quot;value&quot;).equalsIgnoreCase(startTimeError));</span>
+<span class="fc" id="L216">				assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_EndTime_Error&quot;))).getAttribute(&quot;value&quot;).equalsIgnoreCase(endTimeError));</span>
+<span class="fc" id="L217">				assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Reservation_Success&quot;))).getText().equalsIgnoreCase(successMessage));</span>
+<span class="fc" id="L218">				util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L219">				Thread.sleep(1000);</span>
+<span class="fc" id="L220">				driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Cancel_Res_Repairs_Home&quot;))).click();</span>
+<span class="fc" id="L221">				driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Logout&quot;))).click();</span>
+<span class="fc" id="L222">				break outerloop;</span>
+			} 
+		}
+<span class="fc" id="L225">	}</span>
+
+	public void CancelReservedRepairers(WebDriver driver, String repairer_login_username, String repairer_login_password, 
+			String statusPending, String statusApproved, String statusDecline, String statusCancelled, String statusComplete,
+			String screenShotName) throws InterruptedException {
+<span class="fc" id="L230">		util.Login(driver, prop, repairer_login_username, repairer_login_password, &quot;Cancel Reserved Repairers&quot;);</span>
+<span class="fc" id="L231">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_List_My_Reservations&quot;))).click();</span>
+<span class="fc" id="L232">		Thread.sleep(2500);</span>
+
+<span class="fc" id="L234">		List&lt;WebElement&gt; rows= driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;))).findElements(By.tagName(&quot;tr&quot;));</span>
+		outerloop:
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">			for (int j=2;j&lt;rows.size();j++) {</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">				for(int i=1;i&lt;=4;i++)</span>
+				{
+<span class="fc" id="L239">					String str=driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;3&quot;+&quot;]&quot;)).getText();</span>
+
+<span class="pc bpc" id="L241" title="3 of 4 branches missed.">					if(str.equalsIgnoreCase(statusPending) || str.equalsIgnoreCase(statusApproved)) {</span>
+<span class="fc" id="L242">						util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L243">						Thread.sleep(5000);</span>
+<span class="fc" id="L244">						driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;4&quot;+&quot;]/a&quot;)).click();</span>
+<span class="fc" id="L245">						Thread.sleep(5000);</span>
+<span class="fc" id="L246">						WebElement element = driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Reservation_Cancel&quot;)));</span>
+<span class="fc" id="L247">						driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Reservation_Cancel&quot;))).click();</span>
+<span class="fc" id="L248">						Thread.sleep(2500);</span>
+<span class="fc" id="L249">						String str1 = driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;3&quot;+&quot;]&quot;)).getText();</span>
+<span class="fc" id="L250">						assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;3&quot;+&quot;]&quot;)).getText().equalsIgnoreCase(statusCancelled));</span>
+<span class="fc" id="L251">						util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L252">						Thread.sleep(2500);</span>
+						
+<span class="fc" id="L254">						driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Cancel_Res_Repairs_Home&quot;))).click();</span>
+<span class="fc" id="L255">						driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Logout&quot;))).click();</span>
+<span class="fc" id="L256">						break outerloop;</span>
+					}else {
+<span class="nc" id="L258">						util.takeScreenShot(driver, screenShotName);</span>
+						continue;
+					}
+				}
+			}
+<span class="fc" id="L263">	}</span>
+
+
+	public void ModifyReservedRepairers(WebDriver driver, String repairer_login_username, String repairer_login_password, 
+			String statusPending, String statusApproved, String statusDecline, String statusCancelled, String statusComplete, 
+			String startTime, String endTime, String startTimeError, String endTimeError, String modifySuccessMessage, String modifyStartTime, String modifyEndTime, String screenShotName) throws InterruptedException {
+
+		String regID, initStartTime, initEndTime;
+
+<span class="fc" id="L272">		util.Login(driver, prop, repairer_login_username, repairer_login_password, &quot;Modify Reserved Repairers&quot;);</span>
+		//Click on the Search User Role link
+
+<span class="fc" id="L275">		driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_List_My_Reservations&quot;))).click();</span>
+<span class="fc" id="L276">		Thread.sleep(2500);</span>
+
+<span class="fc" id="L278">		List&lt;WebElement&gt; rows= driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;))).findElements(By.tagName(&quot;tr&quot;));</span>
+		outerloop:
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">			for (int j=2;j&lt;rows.size();j++) {</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">				for(int i=1;i&lt;=4;i++)</span>
+				{
+<span class="fc" id="L283">					String str=driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;3&quot;+&quot;]&quot;)).getText();</span>
+
+<span class="pc bpc" id="L285" title="1 of 4 branches missed.">					if(str.equalsIgnoreCase(statusPending) || str.equalsIgnoreCase(statusApproved)) {</span>
+<span class="fc" id="L286">						util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L287">						Thread.sleep(1000);</span>
+<span class="fc" id="L288">						driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+j+&quot;]/td[&quot;+&quot;4&quot;+&quot;]/a&quot;)).click();</span>
+<span class="fc" id="L289">						Thread.sleep(1000);</span>
+
+<span class="fc" id="L291">						regID=driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_Res_ID&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L292">						initStartTime=driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_Start_Time&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L293">						initEndTime=driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_End_Time&quot;))).getAttribute(&quot;value&quot;);</span>
+
+<span class="fc" id="L295">						driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Modify&quot;))).click();</span>
+<span class="fc" id="L296">						Thread.sleep(1000);</span>
+<span class="fc" id="L297">						util.takeScreenShot(driver, screenShotName);</span>
+						
+<span class="fc" id="L299">						new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_Start_Time&quot;)))).selectByVisibleText(startTime);</span>
+<span class="fc" id="L300">						new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Slt_End_Time&quot;)))).selectByVisibleText(endTime);</span>
+<span class="fc" id="L301">						util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L302">						Thread.sleep(1000);</span>
+<span class="fc" id="L303">						driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Reservation_Submit&quot;))).click();</span>
+<span class="fc" id="L304">						assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_StartTime_Error&quot;))).getAttribute(&quot;value&quot;).equalsIgnoreCase(startTimeError));</span>
+<span class="fc" id="L305">						assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_EndTime_Error&quot;))).getAttribute(&quot;value&quot;).equalsIgnoreCase(endTimeError));</span>
+<span class="fc" id="L306">						String message = driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Reservation_Success&quot;))).getText();</span>
+<span class="fc" id="L307">						assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Reservation_Success&quot;))).getText().equalsIgnoreCase(modifySuccessMessage));</span>
+<span class="fc" id="L308">						util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L309">						Thread.sleep(500);</span>
+<span class="fc" id="L310">						driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Modify_Home&quot;))).click();</span>
+						
+<span class="fc" id="L312">						driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_List_My_Reservations&quot;))).click();</span>
+
+<span class="pc bpc" id="L314" title="1 of 2 branches missed.">						for(int a=2;a&lt;rows.size();a++) {</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">							for(int b=1;b&lt;=4;b++) {</span>
+<span class="fc" id="L316">								System.out.print(driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+a+&quot;]/td[&quot;+b+&quot;]&quot;)).getAttribute(&quot;value&quot;)+&quot;\t&quot;);</span>
+<span class="fc" id="L317">								String modResIDCheck=driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+a+&quot;]/td[&quot;+&quot;1&quot;+&quot;]&quot;)).getText();</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">								if(modResIDCheck.equalsIgnoreCase(regID)) {</span>
+<span class="fc" id="L319">									driver.findElement(By.xpath(prop.getProperty(&quot;Tbl_List_My_Reservation_Table&quot;)+&quot;/tbody/tr[&quot;+a+&quot;]/td[&quot;+&quot;4&quot;+&quot;]/a&quot;)).click();</span>
+<span class="fc" id="L320">									Thread.sleep(2000);</span>
+<span class="fc" id="L321">									String str11 = driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_Start_Time&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L322">									assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_Start_Time&quot;))).getAttribute(&quot;value&quot;).equalsIgnoreCase(modifyStartTime));</span>
+<span class="fc" id="L323">									Thread.sleep(1000);</span>
+<span class="fc" id="L324">									String str12  = driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_End_Time&quot;))).getAttribute(&quot;value&quot;);</span>
+<span class="fc" id="L325">									assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Modify_End_Time&quot;))).getAttribute(&quot;value&quot;).equalsIgnoreCase(modifyEndTime));</span>
+<span class="fc" id="L326">									Thread.sleep(1000);</span>
+<span class="fc" id="L327">									driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Modify_Homepage&quot;))).click();</span>
+<span class="fc" id="L328">									Thread.sleep(1000);</span>
+<span class="fc" id="L329">									driver.findElement(By.xpath(prop.getProperty(&quot;Lnk_Logout&quot;))).click();</span>
+<span class="fc" id="L330">									break outerloop;</span>
+								}else {
+									continue;
+								}
+							}
+						}
+					}else {
+						continue;
+					}
+				}
+			}
+<span class="fc" id="L341">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

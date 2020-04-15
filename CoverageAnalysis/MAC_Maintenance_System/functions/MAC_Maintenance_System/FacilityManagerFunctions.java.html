@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>FacilityManagerFunctions.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">functions</a> &gt; <a href="index.source.html" class="el_package">MAC_Maintenance_System</a> &gt; <span class="el_source">FacilityManagerFunctions.java</span></div><h1>FacilityManagerFunctions.java</h1><pre class="source lang-java linenums">package MAC_Maintenance_System;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
+
+<span class="fc" id="L17">public class FacilityManagerFunctions {</span>
+	
+<span class="fc" id="L19">	private UtilFunctions util = new UtilFunctions();</span>
+	public WebDriver driver;
+	public Properties prop;
+
+	public void facilityManagerRegistration(String username, String password, String role, String firstname,
+			String middlename, String lastname, String utaId, String phNumber, String email, String numericAddress,
+			String streetAddress, String city, String state, String zipcode) throws InterruptedException {
+
+<span class="fc" id="L27">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L28">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_SignUp&quot;))).click();</span>
+<span class="fc" id="L29">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Username&quot;))).clear();</span>
+<span class="fc" id="L30">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Username&quot;))).sendKeys(username);</span>
+<span class="fc" id="L31">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Password&quot;))).clear();</span>
+<span class="fc" id="L32">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Password&quot;))).sendKeys(password);</span>
+<span class="fc" id="L33">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Role&quot;)))).selectByVisibleText(role);</span>
+<span class="fc" id="L34">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Firstname&quot;))).clear();</span>
+<span class="fc" id="L35">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Firstname&quot;))).sendKeys(firstname);</span>
+<span class="fc" id="L36">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Middlename&quot;))).clear();</span>
+<span class="fc" id="L37">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Middlename&quot;))).sendKeys(middlename);</span>
+<span class="fc" id="L38">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Lastname&quot;))).clear();</span>
+<span class="fc" id="L39">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Lastname&quot;))).sendKeys(lastname);</span>
+<span class="fc" id="L40">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_UTAId&quot;))).clear();</span>
+<span class="fc" id="L41">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_UTAId&quot;))).sendKeys(utaId);</span>
+<span class="fc" id="L42">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Phone&quot;))).clear();</span>
+<span class="fc" id="L43">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Phone&quot;))).sendKeys(phNumber);</span>
+<span class="fc" id="L44">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Email&quot;))).clear();</span>
+<span class="fc" id="L45">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Email&quot;))).sendKeys(email);</span>
+<span class="fc" id="L46">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_NumericAddress&quot;))).clear();</span>
+<span class="fc" id="L47">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_NumericAddress&quot;))).sendKeys(numericAddress);</span>
+<span class="fc" id="L48">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_StreetAddress&quot;))).clear();</span>
+<span class="fc" id="L49">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_StreetAddress&quot;))).sendKeys(streetAddress);</span>
+<span class="fc" id="L50">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_City&quot;))).clear();</span>
+<span class="fc" id="L51">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_City&quot;))).sendKeys(city);</span>
+<span class="fc" id="L52">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_State1&quot;)))).selectByVisibleText(state);</span>
+<span class="fc" id="L53">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Zipcode&quot;))).clear();</span>
+<span class="fc" id="L54">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_SignUp_Zipcode&quot;))).sendKeys(zipcode);</span>
+		// Thread.sleep(1_000);
+<span class="fc" id="L56">		util.takeScreenShot(driver, methodName + &quot;BefofreSignUp&quot;);</span>
+<span class="fc" id="L57">		driver.findElement(By.xpath(prop.getProperty(&quot;Button_SignUp_Submit&quot;))).click();</span>
+		// Thread.sleep(1_000);
+<span class="fc" id="L59">		util.takeScreenShot(driver, methodName + &quot;AfterSignUpPage&quot;);</span>
+<span class="fc" id="L60">	}</span>
+
+	public void facilityManagerLogin(String userName, String password) throws InterruptedException {
+
+<span class="fc" id="L64">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L65">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Login&quot;))).click();</span>
+<span class="fc" id="L66">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_username&quot;))).clear();</span>
+<span class="fc" id="L67">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_username&quot;))).sendKeys(userName);</span>
+<span class="fc" id="L68">		Thread.sleep(2_000);</span>
+<span class="fc" id="L69">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_password&quot;))).clear();</span>
+<span class="fc" id="L70">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Login_password&quot;))).sendKeys(password);</span>
+<span class="fc" id="L71">		Thread.sleep(2_000);</span>
+<span class="fc" id="L72">		util.takeScreenShot(driver, methodName + &quot;BeforeLogin&quot;);</span>
+<span class="fc" id="L73">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Login_submit&quot;))).click();</span>
+<span class="fc" id="L74">		Thread.sleep(2_000);</span>
+<span class="fc" id="L75">		util.takeScreenShot(driver, methodName + &quot;AfterLogin&quot;);</span>
+<span class="fc" id="L76">	}</span>
+	
+	public void facilityManagerSearchUnassignedMar() throws InterruptedException {
+
+<span class="fc" id="L80">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L81">		driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Search_Mar&quot;))).click();</span>
+<span class="fc" id="L82">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Search_Mar_Assigned&quot;))).click();</span>
+		// Thread.sleep(1_000);
+<span class="fc" id="L84">		util.takeScreenShot(driver, methodName + &quot;SearchUnAssignedMar&quot;);</span>
+<span class="fc" id="L85">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Search_Mar_Submit&quot;))).click();</span>
+		// Thread.sleep(1_000);
+<span class="fc" id="L87">		util.takeScreenShot(driver, methodName + &quot;SearchUnAssignedMarWithList&quot;);</span>
+		//Btn_Search_Mar_Assign
+<span class="fc" id="L89">	}</span>
+
+	public void facilityManagerAssignMar(String tCaseNumber, String assignTo, String date,
+			String estimatedTimeOfRepaier) throws InterruptedException {
+
+<span class="fc" id="L94">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L95">		driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[8]/a&quot;)).click();</span>
+<span class="fc" id="L96">		driver.findElement(By.xpath(&quot;html/body/a[1]/button&quot;)).click();</span>
+<span class="fc" id="L97">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Assign_Mar_Assign_To&quot;))))</span>
+<span class="fc" id="L98">				.selectByVisibleText(assignTo);</span>
+<span class="fc" id="L99">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Assign_Mar_Assigned_Date&quot;))).clear();</span>
+<span class="fc" id="L100">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Assign_Mar_Assigned_Date&quot;))).sendKeys(date);</span>
+<span class="fc" id="L101">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Assign_Mar_ETR&quot;))))</span>
+<span class="fc" id="L102">				.selectByVisibleText(estimatedTimeOfRepaier);</span>
+		// Thread.sleep(1_000);
+<span class="fc" id="L104">		util.takeScreenShot(driver, methodName + &quot;AssignMarWithDate&quot; + tCaseNumber);</span>
+<span class="fc" id="L105">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Assign_Mar_Submit&quot;))).click();</span>
+		// Thread.sleep(1_000);
+<span class="fc" id="L107">		util.takeScreenShot(driver, methodName + &quot;AssigMarWithDateError&quot; + tCaseNumber);</span>
+<span class="fc" id="L108">	}</span>
+
+	public String facilityManagerGetAssignedDateError() {
+
+<span class="fc" id="L112">		return driver.findElement(By.xpath(prop.getProperty(&quot;Txt_Assigned_Date_Error&quot;))).getText();</span>
+	}
+
+	public void facilityManagerSearchAssignedMarByDate(String date) {
+
+<span class="fc" id="L117">		driver.findElement(By.linkText(&quot;Search Mar&quot;)).click();</span>
+<span class="fc" id="L118">		driver.findElement(By.name(&quot;assigned&quot;)).click();</span>
+<span class="fc" id="L119">		driver.findElement(By.name(&quot;assignedDate&quot;)).clear();</span>
+<span class="fc" id="L120">		driver.findElement(By.name(&quot;assignedDate&quot;)).sendKeys(date);</span>
+<span class="fc" id="L121">		driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Search_Mar_Submit&quot;))).click();</span>
+<span class="fc" id="L122">	}</span>
+
+	public void verifyMars(String marNumber, String facilityType, String name, String urgency,
+			String description, String date, String reportedBy) {
+
+<span class="fc" id="L127">		String actualMarNumber = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L128">		String actualFacilityType = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L129">		String actualName = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[3]&quot;)).getText();</span>
+<span class="fc" id="L130">		String actualUrgency = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[4]&quot;)).getText();</span>
+<span class="fc" id="L131">		String actualDescription = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[5]&quot;)).getText();</span>
+<span class="fc" id="L132">		String actualDate = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[6]&quot;)).getText();</span>
+<span class="fc" id="L133">		String actualReportedBy = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[7]&quot;)).getText();</span>
+
+<span class="fc" id="L135">		assertEquals(marNumber, actualMarNumber);</span>
+<span class="fc" id="L136">		assertEquals(facilityType, actualFacilityType);</span>
+<span class="fc" id="L137">		assertEquals(name, actualName);</span>
+<span class="fc" id="L138">		assertEquals(urgency, actualUrgency);</span>
+<span class="fc" id="L139">		assertEquals(description, actualDescription);</span>
+<span class="fc" id="L140">		assertEquals(date, actualDate);</span>
+<span class="fc" id="L141">		assertEquals(reportedBy, actualReportedBy);</span>
+<span class="fc" id="L142">	}</span>
+
+	public void facilityMangerReviewUnassignedMar(String expectedMarNumberHeader, String expectedMarNumber, String expectedFacilirtTypeHeader, String expectedFacilityType,
+			String expectedNameHeader,String expectedName, String expectedUrgencyHeader, String expectedUrgnency, String expectedDateHeader, String expectedDate, String expectedDescriptionHeader, String expectedDescription,
+			String expectedReportedByHeader,String expectedReportedBy, String expectedAssignedToHeader, String expectedassignedTo, String expectedAssignedDateHeader, String expectedAssignedDate, String expectedEtrHeader, String expectedEtr) {
+		
+<span class="fc" id="L148">		driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[8]/a&quot;)).click();</span>
+		
+<span class="fc" id="L150">		String actualMarNumberHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[1]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L151">		String actualFacilityTypeHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L152">		String actualNameHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[3]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L153">		String actualUrgencyHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[4]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L154">		String actualDescriptionHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[6]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L155">		String actualDateHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[5]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L156">		String actualReportedByHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[7]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L157">		String actualAssignedToHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[8]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L158">		String actualAssignedDateHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[9]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L159">		String actualEtrHeader = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[10]/td[1]&quot;)).getText();</span>
+<span class="fc" id="L160">		String actualMarNumber = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[1]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L161">		String actualFacilityType = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[2]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L162">		String actualName = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[3]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L163">		String actualUrgency = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[4]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L164">		String actualDescription = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[6]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L165">		String actualDate = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[5]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L166">		String actualReportedBy = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[7]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L167">		String actualAssignedTo = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[8]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L168">		String actualAssignedDate = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[9]/td[2]&quot;)).getText();</span>
+<span class="fc" id="L169">		String actualEtr = driver.findElement(By.xpath(&quot;html/body/table/tbody/tr[10]/td[2]&quot;)).getText();</span>
+		
+<span class="fc" id="L171">		assertEquals(expectedMarNumberHeader, actualMarNumberHeader);</span>
+<span class="fc" id="L172">		assertEquals(expectedMarNumber, actualMarNumber);</span>
+<span class="fc" id="L173">		assertEquals(expectedFacilirtTypeHeader, actualFacilityTypeHeader);</span>
+<span class="fc" id="L174">		assertEquals(expectedFacilityType, actualFacilityType);</span>
+<span class="fc" id="L175">		assertEquals(expectedNameHeader, actualNameHeader);</span>
+<span class="fc" id="L176">		assertEquals(expectedName, actualName);</span>
+<span class="fc" id="L177">		assertEquals(expectedUrgencyHeader, actualUrgencyHeader);</span>
+<span class="fc" id="L178">		assertEquals(expectedUrgnency, actualUrgency);</span>
+<span class="fc" id="L179">		assertEquals(expectedDescriptionHeader, actualDescriptionHeader);</span>
+<span class="fc" id="L180">		assertEquals(expectedDescription, actualDescription);</span>
+<span class="fc" id="L181">		assertEquals(expectedDateHeader, actualDateHeader);</span>
+<span class="fc" id="L182">		assertEquals(expectedDate, actualDate);</span>
+<span class="fc" id="L183">		assertEquals(expectedReportedByHeader, actualReportedByHeader);</span>
+<span class="fc" id="L184">		assertEquals(expectedReportedBy, actualReportedBy);</span>
+<span class="fc" id="L185">		assertEquals(expectedAssignedToHeader, actualAssignedToHeader);</span>
+<span class="fc" id="L186">		assertEquals(expectedassignedTo, actualAssignedTo);</span>
+<span class="fc" id="L187">		assertEquals(expectedAssignedDateHeader, actualAssignedDateHeader);</span>
+<span class="fc" id="L188">		assertEquals(expectedAssignedDate, actualAssignedDate);</span>
+<span class="fc" id="L189">		assertEquals(expectedEtrHeader, actualEtrHeader);</span>
+<span class="fc" id="L190">		assertEquals(expectedEtr, actualEtr);</span>
+<span class="fc" id="L191">	}</span>
+
+	public void AddFacility(WebDriver driver, String tCaseNumber, String facilityType, String name, String interval, String duration, String venue, String screenShotName)
+			throws InterruptedException {
+<span class="fc" id="L195">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Facility_Type&quot;)))).selectByVisibleText(facilityType);</span>
+<span class="fc" id="L196">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Name&quot;))).clear();</span>
+<span class="fc" id="L197">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Name&quot;))).sendKeys(name);</span>
+<span class="fc" id="L198">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Interval&quot;)))).selectByVisibleText(interval);</span>
+<span class="fc" id="L199">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Duration&quot;)))).selectByVisibleText(duration);</span>
+<span class="fc" id="L200">		new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Venue&quot;)))).selectByVisibleText(venue);</span>
+<span class="fc" id="L201">		driver.findElement(By.xpath(prop.getProperty(&quot;Input_Add_facility_Btn_Clk_Submit&quot;))).click();</span>
+<span class="fc" id="L202">		util.takeScreenShot(driver, screenShotName);</span>
+		//Thread.sleep(1_000);
+<span class="fc" id="L204">	}</span>
+	
+	
+	
+	public void verifyAddFacility(WebDriver driver, String nameError1,String nameError2, String screenShotName)
+			throws InterruptedException {
+<span class="fc bfc" id="L210" title="All 2 branches covered.">		if (nameError1.equals(&quot;&quot;))</span>
+<span class="fc" id="L211">		assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Add_facility_nameError2&quot;))).getAttribute(&quot;value&quot;).equals(nameError2));</span>
+		else
+<span class="fc" id="L213">		assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Add_facility_nameError1&quot;))).getAttribute(&quot;value&quot;).equals(nameError1));</span>
+<span class="fc" id="L214">		util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L215">	}</span>
+	
+	public void verifyFacilityDetails(WebDriver driver, String dateError, String endTimeError, String screenShotName) {
+<span class="fc bfc" id="L218" title="All 2 branches covered.">		if (dateError.equals(&quot;&quot;))</span>
+<span class="fc" id="L219">			assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_endTimeError&quot;))).getAttribute(&quot;value&quot;).equals(endTimeError));</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">		if (endTimeError.equals(&quot;&quot;))</span>
+<span class="fc" id="L221">			assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_dateError&quot;))).getAttribute(&quot;value&quot;).equals(dateError));</span>
+			//assertTrue(driver.findElement(By.id(prop.getProperty(&quot;dateError&quot;))).getAttribute(&quot;value&quot;).equals(dateError));
+<span class="pc bpc" id="L223" title="1 of 4 branches missed.">		if (dateError.equals(&quot;&quot;) &amp;&amp; endTimeError.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L224">			assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_endTimeError&quot;))).getAttribute(&quot;value&quot;).equals(endTimeError));</span>
+<span class="nc" id="L225">			assertTrue(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_dateError&quot;))).getAttribute(&quot;value&quot;).equals(dateError));</span>
+		}
+		
+<span class="fc" id="L228">		util.takeScreenShot(driver, screenShotName);</span>
+		
+<span class="fc" id="L230">	}</span>
+	
+	
+	
+	public void verifyContentsSpecific(WebDriver driver, String row1ValueOnpage, String expectedrow1Value, String row2ValueOnpage, String expectedrow2Value, String row3ValueOnpage, String expectedrow3Value, 
+			 String row4ValueOnpage, String expectedrow4Value, String row5ValueOnpage, String expectedrow5Value, String snapShotName) {
+
+<span class="fc" id="L237">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row1ValueOnpage))).getText().equals(expectedrow1Value));</span>
+<span class="fc" id="L238">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row2ValueOnpage))).getText().equals(expectedrow2Value));</span>
+<span class="fc" id="L239">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row3ValueOnpage))).getText().equals(expectedrow3Value));</span>
+<span class="fc" id="L240">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row4ValueOnpage))).getText().equals(expectedrow4Value));</span>
+<span class="fc" id="L241">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row5ValueOnpage))).getText().equals(expectedrow5Value));</span>
+<span class="fc" id="L242">		 util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L243">	 }</span>
+	 
+	 
+	 
+	 public void verifyHeadersSpecific(WebDriver driver, String row1TitleOnpage, String expectedrow1Title, String row2TitleOnpage, String expectedrow2Title, String row3TitleOnpage, String expectedrow3Title, 
+			 String row4TitleOnpage, String expectedrow4Title, String row5TitleOnpage, String expectedrow5Title, String snapShotName) {
+		 //System.out.println(driver.findElement(By.xpath(prop.getProperty(row1TitleOnpage))).getText());
+<span class="fc" id="L250">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row1TitleOnpage))).getText().equals(expectedrow1Title));</span>
+<span class="fc" id="L251">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row2TitleOnpage))).getText().equals(expectedrow2Title));</span>
+<span class="fc" id="L252">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row3TitleOnpage))).getText().equals(expectedrow3Title));</span>
+<span class="fc" id="L253">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row4TitleOnpage))).getText().equals(expectedrow4Title));</span>
+<span class="fc" id="L254">		 assertTrue(driver.findElement(By.xpath(prop.getProperty(row5TitleOnpage))).getText().equals(expectedrow5Title));</span>
+<span class="fc" id="L255">		 util.takeScreenShot(driver, snapShotName);</span>
+<span class="fc" id="L256">	 }</span>
+
+	 
+	 public void inputFacilityDetails(WebDriver driver, String facilityType, String date, String startTime, String endTime, String screenShotName) {
+<span class="fc" id="L260">		 new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_FacilityType&quot;)))).selectByVisibleText(facilityType);</span>
+<span class="fc" id="L261">		 driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_Date&quot;))).clear();</span>
+<span class="fc" id="L262">		 driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_Date&quot;))).sendKeys(date);</span>
+<span class="fc" id="L263">		 new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_StartTime&quot;)))).selectByVisibleText(startTime);</span>
+<span class="fc" id="L264">		 new Select(driver.findElement(By.xpath(prop.getProperty(&quot;Input_view_facility_EndTime&quot;)))).selectByVisibleText(endTime);</span>
+<span class="fc" id="L265">		 driver.findElement(By.xpath(prop.getProperty(&quot;Btn_Clk_view_facility_submit&quot;))).click();</span>
+<span class="fc" id="L266">		 util.takeScreenShot(driver, screenShotName);</span>
+<span class="fc" id="L267">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

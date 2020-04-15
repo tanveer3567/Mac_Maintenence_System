@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>SeleniumTC04.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.selinium</a> &gt; <span class="el_source">SeleniumTC04.java</span></div><h1>SeleniumTC04.java</h1><pre class="source lang-java linenums">package edu.advanceST.selinium;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.FileInputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import MAC_Maintenance_System.UtilFunctions;
+import edu.advanceST.model.Mar;
+import edu.advanceST.model.Reservation;
+import edu.advanceST.util.SQLConnection;
+import junitparams.FileParameters;
+import junitparams.JUnitParamsRunner;
+
+@RunWith(JUnitParamsRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+<span class="fc" id="L38">public class SeleniumTC04 extends MAC_Maintenance_System.RepairerFunctions {</span>
+<span class="fc" id="L39">	static SQLConnection DBMgr = SQLConnection.getInstance();</span>
+<span class="fc" id="L40">	private StringBuffer verificationErrors = new StringBuffer();</span>
+<span class="fc" id="L41">	private UtilFunctions util = new UtilFunctions();</span>
+	public String sAppURL, sSharedUIMapPath, testDelay;
+<span class="fc" id="L43">	public static String repairer_login_username, repairer_username;</span>
+	public String repairer_login_password, repairer_password;
+<span class="fc" id="L45">	private boolean acceptNextAlert = true;</span>
+
+	@Before
+	public void setUp() throws Exception {
+		//	MAGIC CODE GOES HERE 
+<span class="fc" id="L50">		System.setProperty(&quot;webdriver.chrome.driver&quot;, &quot;C:/chromedriver_win32/chromedriver.exe&quot;);</span>
+<span class="fc" id="L51">		driver = new ChromeDriver();</span>
+<span class="fc" id="L52">		prop = new Properties();	  </span>
+<span class="fc" id="L53">		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);</span>
+<span class="fc" id="L54">		prop.load(new FileInputStream(&quot;./configuration/MAC_Configuration.properties&quot;));</span>
+<span class="fc" id="L55">		sAppURL = prop.getProperty(&quot;sAppURL&quot;);</span>
+<span class="fc" id="L56">		sSharedUIMapPath = prop.getProperty(&quot;SharedUIMap&quot;);</span>
+<span class="fc" id="L57">		prop.load(new FileInputStream(&quot;./Login/Login.properties&quot;));</span>
+<span class="fc" id="L58">		repairer_login_username = prop.getProperty(&quot;repairer_login_username&quot;);</span>
+<span class="fc" id="L59">		repairer_login_password = prop.getProperty(&quot;repairer_login_password&quot;);</span>
+<span class="fc" id="L60">		repairer_username = prop.getProperty(&quot;repairer_username&quot;);</span>
+<span class="fc" id="L61">		repairer_password = prop.getProperty(&quot;repairer_password&quot;);</span>
+<span class="fc" id="L62">		testDelay=prop.getProperty(&quot;testDelay&quot;);</span>
+<span class="fc" id="L63">		prop.load(new FileInputStream(sSharedUIMapPath));</span>
+		//util = new UtilFunctions(driver, prop);
+<span class="fc" id="L65">	}</span>
+	
+	private static ArrayList&lt;Mar&gt; ReturnMatchingMarList() {
+<span class="fc" id="L68">		ArrayList&lt;Mar&gt; MarListInDB = new ArrayList&lt;Mar&gt;();</span>
+
+<span class="fc" id="L70">		Statement stmt = null;</span>
+<span class="fc" id="L71">		Connection conn = SQLConnection.getDBConnection();  </span>
+		try {
+<span class="fc" id="L73">			stmt = conn.createStatement();</span>
+<span class="fc" id="L74">			ResultSet MarList = stmt.executeQuery(&quot;Select * from mar where mar_number IN (\n&quot; + </span>
+<span class="fc" id="L75">					&quot;SELECT mar_number FROM mac_maintenance_system.assign_mar where assigned_to =&quot; + &quot;\'&quot; + repairer_username + &quot;\') order by mar_number DESC&quot;);</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">			while (MarList.next()) {</span>
+<span class="fc" id="L77">				Mar mar = new Mar(); </span>
+<span class="fc" id="L78">				mar.setMarNumber(MarList.getLong(&quot;mar_number&quot;));</span>
+<span class="fc" id="L79">				mar.setFacilityType(MarList.getString(&quot;facility_type&quot;));</span>
+<span class="fc" id="L80">				mar.setName(MarList.getString(&quot;name&quot;));</span>
+<span class="fc" id="L81">				mar.setUrgency(MarList.getString(&quot;urgency&quot;));</span>
+<span class="fc" id="L82">				mar.setDescription(MarList.getString(&quot;description&quot;));</span>
+<span class="fc" id="L83">				mar.setDate(MarList.getDate(&quot;date&quot;));</span>
+<span class="fc" id="L84">				mar.setReportedBy(MarList.getString(&quot;reportedBy&quot;));</span>
+<span class="fc" id="L85">				MarListInDB.add(mar);	</span>
+			}
+<span class="pc" id="L87">		} catch (SQLException e) {}</span>
+<span class="fc" id="L88">		return MarListInDB;</span>
+	}
+
+	private String [][] getTableContentsFromPage(int listSize) { // this method gets the list mar table contents from the web page
+<span class="fc" id="L92">		String [][] MarArray = new String[listSize - 1][7];</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">		for (int i=0; i&lt;listSize - 1; i++) {</span>
+<span class="fc" id="L94">			MarArray[i][0]=  driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L95">					prop.getProperty(&quot;Repairer_ListMar_MarNumberCol&quot;))).getText();</span>
+<span class="fc" id="L96">			MarArray[i][1] = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L97">					prop.getProperty(&quot;Repairer_ListMar_FacilityTypeCol&quot;))).getText();</span>
+<span class="fc" id="L98">			MarArray[i][2] = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L99">					prop.getProperty(&quot;Repairer_ListMar_NameCol&quot;))).getText();</span>
+<span class="fc" id="L100">			MarArray[i][3] = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L101">					prop.getProperty(&quot;Repairer_ListMar_UrgencyCol&quot;))).getText();</span>
+<span class="fc" id="L102">			MarArray[i][4] = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L103">					prop.getProperty(&quot;Repairer_ListMar_DescriptionCol&quot;))).getText();</span>
+<span class="fc" id="L104">			MarArray[i][5] = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L105">					prop.getProperty(&quot;Repairer_ListMar_DateCol&quot;))).getText();</span>
+<span class="fc" id="L106">			MarArray[i][6] = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_PrefixTable&quot;)+(i+2)+</span>
+<span class="fc" id="L107">					prop.getProperty(&quot;Repairer_ListMar_ReportedByCol&quot;))).getText();</span>
+		}
+<span class="fc" id="L109">		return MarArray;</span>
+	}
+
+	private String [][] getMarListFromDB(int listSize) throws SQLException { // this method gets the list mar table contents from the DB
+<span class="fc" id="L113">		ArrayList&lt;Mar&gt; fromDB= ReturnMatchingMarList();</span>
+<span class="fc" id="L114">		String [][] arrayDB = new String [listSize - 1][7];</span>
+<span class="fc" id="L115">		System.out.println(arrayDB.length);</span>
+<span class="fc" id="L116">		int i=0;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">		for (Mar p:fromDB) {</span>
+<span class="fc" id="L118">			arrayDB[i][0]= Long.toString(p.getMarNumber());</span>
+<span class="fc" id="L119">			arrayDB[i][1]=p.getFacilityType();</span>
+<span class="fc" id="L120">			arrayDB[i][2]=p.getName();</span>
+<span class="fc" id="L121">			arrayDB[i][3]=p.getUrgency();</span>
+<span class="fc" id="L122">			arrayDB[i][4]=p.getDescription();</span>
+<span class="fc" id="L123">			arrayDB[i][5]= new SimpleDateFormat(&quot;yyyy-MM-dd&quot;).format(p.getDate());</span>
+<span class="fc" id="L124">			arrayDB[i][6]=p.getReportedBy();</span>
+<span class="fc" id="L125">			i++;</span>
+		}
+<span class="fc" id="L127">		return arrayDB;</span>
+	}
+
+	private Boolean arraysDiff (String [][] array1, String [][] array2) { // this method compares the contents of the two tables
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">		Boolean diff=false || (array1.length!=array2.length);</span>
+<span class="fc" id="L132">		System.out.println(array1.length);</span>
+<span class="fc" id="L133">		System.out.println(array2.length);</span>
+<span class="pc bpc" id="L134" title="1 of 4 branches missed.">		for (int i=0;i&lt;array1.length &amp;&amp; !diff;i++) {</span>
+<span class="pc bpc" id="L135" title="2 of 4 branches missed.">			diff  = !array1[i][0].equals(array2[i][0]) || !array1[i][1].equals(array2[i][1]) || </span>
+<span class="pc bpc" id="L136" title="2 of 4 branches missed.">					!array1[i][2].equals(array2[i][2]) || !array1[i][3].equals(array2[i][3]) ||</span>
+<span class="pc bpc" id="L137" title="2 of 4 branches missed.">					!array1[i][4].equals(array2[i][4]) || !array1[i][5].equals(array2[i][5]) ||</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">					!array1[i][6].equals(array2[i][6]);</span>
+		}
+<span class="fc" id="L140">		return diff;</span>
+	}
+	
+	@Test
+	@FileParameters(value=&quot;excel/TC04a_test_cases.csv&quot;)
+	public void aRepairerRegistration(String testCaseNo, String username, String password, String role, String firstname, String middlename, String lastname,
+			String utaId, String phone, String email, String numericAddress, String streetAddress, String city,
+			String state, String zipcode, String usernameError, String passwordError, String firstnameError, String middlenameError,
+			String lastnameError, String utaIdError, String phoneError, String emailError, String numericAddressError,
+			String streetAddressError, String cityError, String stateError, String zipcodeError) throws Exception {
+
+<span class="fc" id="L151">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L152">		driver.get(sAppURL + &quot;registration&quot;);</span>
+<span class="fc" id="L153">		String screenShotName = methodName + &quot; Repairer_Registration &quot; + testCaseNo;</span>
+<span class="fc" id="L154">		util.Register(driver, prop, username, password, role, firstname, middlename, lastname, utaId, phone,</span>
+<span class="fc" id="L155">				email, numericAddress, streetAddress, city, state, zipcode, screenShotName);</span>
+
+<span class="fc" id="L157">		Thread.sleep(500);</span>
+<span class="fc" id="L158">		util.verifyRegistrationErrorMessages(driver, prop, usernameError, passwordError, firstnameError, middlenameError,</span>
+<span class="fc" id="L159">				lastnameError, utaIdError, phoneError, emailError, numericAddressError, streetAddressError, cityError,</span>
+<span class="fc" id="L160">				zipcodeError, (methodName + &quot; verifyRepairerRegisterErrMsg test case &quot; + testCaseNo));</span>
+<span class="fc" id="L161">	}</span>
+
+	@Test
+	@FileParameters(value=&quot;excel/TC04b_test_cases.csv&quot;)
+	public void bRepairerLogin(String testCaseNo, String username, String password, String usernameError,
+			String PasswordError) throws Exception {
+<span class="fc" id="L167">		driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L168">		String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L169">		driver.get(sAppURL);</span>
+<span class="fc" id="L170">		String screenShotName = methodName+ &quot;Repairer_Login &quot; + testCaseNo;</span>
+<span class="fc" id="L171">		util.Login(driver, prop, username, password, screenShotName);</span>
+<span class="fc" id="L172">		Thread.sleep(200);</span>
+<span class="fc" id="L173">		util.verifyLoginErrorMessages(driver, prop, usernameError, PasswordError, (methodName+&quot; verifyRepairerLoginErrMsg test case &quot;+testCaseNo));</span>
+<span class="fc" id="L174">	}</span>
+
+	@Test
+	@FileParameters(&quot;excel/TC04c_test_cases.csv&quot;)
+	public void cRepairerListAssignedRepairs(int testCaseNumber, String col1, String col2, String col3, String col4, String col5, String col6, String col7) throws Exception {
+<span class="fc" id="L179">		String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L180">		String screenShotName =methodName + &quot;Repairer_Login &quot; + testCaseNumber;</span>
+		//driver.get(sAppURL);
+<span class="fc" id="L182">		driver.get(sAppURL);</span>
+<span class="fc" id="L183">		util.Login(driver, prop, repairer_username, repairer_password, screenShotName);</span>
+<span class="fc" id="L184">		driver.findElement(By.xpath(prop.getProperty(&quot;Clk_ListMyAssignedRepairs&quot;))).click();</span>
+		//driver.findElement(By.xpath(&quot;/html[1]/body[1]/a[1]&quot;)).click();
+		// MainApp_function(driver, FunctionEnum.listMars); //select list Companies from homepage
+		// check company listing headers
+<span class="fc" id="L188">		verifyHeaders(driver,&quot;Repairer_ListMar_Col1InListMarTableHeader&quot;,col1,&quot;Repairer_ListMar_Col2InListMarTableHeader&quot;,col2,</span>
+<span class="fc" id="L189">				&quot;Repairer_ListMar_Col3InListMarTableHeader&quot;,col3,&quot;Repairer_ListMar_Col4InListMarTableHeader&quot;,col4,</span>
+<span class="fc" id="L190">				&quot;Repairer_ListMar_Col5InListMarTableHeader&quot;,col5, &quot;Repairer_ListMar_Col6InListMarTableHeader&quot;, col6, </span>
+<span class="fc" id="L191">				&quot;Repairer_ListMar_Col7InListMarTableHeader&quot;, col7, methodName+&quot; verifyHeaders test case &quot;+testCaseNumber);</span>
+		//check company listing table contents by comparing results directly with the same database query
+		//Notice - I chose to do this INSTEAD of using a spreadsheet because this is more resistant to changes in the database
+<span class="fc" id="L194">		WebElement MarTable = driver.findElement(By.xpath(prop.getProperty(&quot;Repairer_ListMar_Table&quot;)));</span>
+<span class="fc" id="L195">		int rows = MarTable.findElements(By.tagName(&quot;tr&quot;)).size(); //find the number of rows in the table including the header</span>
+<span class="fc" id="L196">		assertFalse(arraysDiff(getMarListFromDB(rows),getTableContentsFromPage(rows)));</span>
+		//driver.findElement(By.xpath(prop.getProperty(&quot;Clk_Home&quot;))).click(); //go back to homepage
+<span class="fc" id="L198">		Thread.sleep(500);</span>
+<span class="fc" id="L199">		driver.findElement(By.xpath(prop.getProperty(&quot;Clk_Logout_FromAssignedRepairsPage&quot;))).click(); //logout</span>
+<span class="fc" id="L200">		Thread.sleep(500);</span>
+<span class="fc" id="L201">	}</span>
+
+	@Test
+	@FileParameters(&quot;excel/TC04d_test_cases.csv&quot;)
+	public void dRepairerViewSpecificRepair(int testCaseNumber, String path, String row1, String row2, String row3, String row4, String row5, String row6, String row7,String row8, String row9, String row10,
+			String data1, String data2, String data3, String data4, String data5, String data6, String data7, String data8, String data9, String data10) throws Exception {
+<span class="fc" id="L207">		String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L208">		String screenShotName =methodName + &quot;Repairer_Login &quot; + testCaseNumber;</span>
+<span class="fc" id="L209">		driver.get(sAppURL);</span>
+		// MainApp_function(driver,FunctionEnum.listCompanies); //select list Companies from homepage
+		// now we select a company
+<span class="fc" id="L212">		util.Login(driver, prop, repairer_username, repairer_password, screenShotName);</span>
+<span class="fc" id="L213">		driver.findElement(By.xpath(prop.getProperty(&quot;Clk_ListMyAssignedRepairs&quot;))).click();</span>
+		//driver.findElement(By.xpath(&quot;/html[1]/body[1]/a[1]&quot;)).click();
+<span class="fc" id="L215">		driver.findElement(By.xpath(path)).click();</span>
+<span class="fc" id="L216">		verifyHeadersSpecific(driver,&quot;Repairer_ListMar_Specific_MarNumber_Title&quot;,row1,&quot;Repairer_ListMar_Specific_FacilityType_Title&quot;,row2,</span>
+<span class="fc" id="L217">				&quot;Repairer_ListMar_Specific_Name_Title&quot;,row3,&quot;Repairer_ListMar_Specific_Urgency_Title&quot;,row4,&quot;Repairer_ListMar_Specific_Date_Title&quot;,row5,</span>
+<span class="fc" id="L218">				&quot;Repairer_ListMar_Specific_Description_Title&quot;,row6,&quot;Repairer_ListMar_Specific_ReportedBy_Title&quot;,row7,&quot;Repairer_ListMar_Specific_AssignedTo_Title&quot;,row8,</span>
+<span class="fc" id="L219">				&quot;Repairer_ListMar_Specific_AssignedDate_Title&quot;,row9,&quot;Repairer_ListMar_Specific_Etr_Title&quot;,row10,</span>
+<span class="fc" id="L220">				methodName+&quot; verifyHeaders test case &quot;+testCaseNumber);</span>
+<span class="fc" id="L221">		verifyContentsSpecific(driver,&quot;Repairer_ListMar_Specific_MarNumber_Value&quot;,data1,&quot;Repairer_ListMar_Specific_FacilityType_Value&quot;,data2,</span>
+<span class="fc" id="L222">				&quot;Repairer_ListMar_Specific_Name_Value&quot;,data3,&quot;Repairer_ListMar_Specific_Urgency_Value&quot;,data4,&quot;Repairer_ListMar_Specific_Date_Value&quot;,data5,</span>
+<span class="fc" id="L223">				&quot;Repairer_ListMar_Specific_Description_Value&quot;,data6,&quot;Repairer_ListMar_Specific_ReportedBy_Value&quot;,data7,&quot;Repairer_ListMar_Specific_AssignedTo_Value&quot;,data8,</span>
+<span class="fc" id="L224">				&quot;Repairer_ListMar_Specific_AssignedDate_Value&quot;,data9,&quot;Repairer_ListMar_Specific_Etr_Value&quot;,data10,</span>
+<span class="fc" id="L225">				methodName+&quot; verifyContents test case &quot;+testCaseNumber);</span>
+<span class="fc" id="L226">		Thread.sleep(500);</span>
+<span class="fc" id="L227">		driver.findElement(By.xpath(prop.getProperty(&quot;Clk_Logout_FromSpecificAssignedRepairsPage&quot;))).click(); //logout</span>
+<span class="fc" id="L228">		Thread.sleep(500);</span>
+<span class="fc" id="L229">	}</span>
+
+	@Test
+	@FileParameters(&quot;excel/TC04h_test_cases.csv&quot;)
+	public void listMyReservations(int testCaseNumber, String col0, String col3, String col6) throws Exception {
+<span class="fc" id="L234">		driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L235">		String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L236">		driver.get(sAppURL);</span>
+<span class="fc" id="L237">		String screenShotName = methodName + &quot;Repairer_List_My_Reservation &quot; + testCaseNumber;</span>
+<span class="fc" id="L238">		ListMyReservation(testCaseNumber, methodName, driver, repairer_login_username, repairer_login_password, col0, col3, col6);</span>
+<span class="fc" id="L239">	}</span>
+	@Test
+    @FileParameters(value=&quot;excel/TC04g_test_cases.csv&quot;)
+	public void requestRepairReservation(String testCaseNo, String startTime, String endTime, 
+			String startTimeError, String endTimeError, String successMessage) throws Exception {
+<span class="fc" id="L244">		driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L245">		String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L246">		driver.get(sAppURL);</span>
+<span class="fc" id="L247">		String screenShotName = methodName +&quot; Repairer&quot; + testCaseNo;</span>
+<span class="fc" id="L248">		RequestReservation(driver, repairer_login_username, repairer_login_password, startTime, endTime, </span>
+<span class="fc" id="L249">				startTimeError, endTimeError, successMessage, screenShotName);</span>
+<span class="fc" id="L250">	}</span>
+	
+	@Test
+	@FileParameters(value=&quot;excel/TC04e_test_cases.csv&quot;)
+	public void repairerCancelResRepairs(String testCaseNo, String statusPending, String statusApproved, 
+			String statusDecline, String statusCancelled, String statusComplete) throws Exception {
+<span class="fc" id="L256">		driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L257">		String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L258">		driver.get(sAppURL);</span>
+<span class="fc" id="L259">		String screenShotName = methodName +&quot; Repairer&quot; + testCaseNo;</span>
+<span class="fc" id="L260">		CancelReservedRepairers(driver, repairer_login_username, repairer_login_password, statusPending, </span>
+<span class="fc" id="L261">				statusApproved, statusDecline, statusCancelled, statusComplete, screenShotName);</span>
+<span class="fc" id="L262">	}</span>
+	
+	@Test
+	@FileParameters(value=&quot;excel/TC04f_test_cases.csv&quot;)
+	public void repairerModifyResRepairs(String testCaseNo, String statusPending, String statusApproved, 
+			String statusDecline, String statusCancelled, String statusComplete, String startTime, String endTime, 
+			String startTimeError, String endTimeError, String successMessage, String modifyStartTime, String modifyEndTime) throws Exception {
+<span class="fc" id="L269">		driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L270">		String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L271">		driver.get(sAppURL);</span>
+<span class="fc" id="L272">		String screenShotName = methodName +&quot; Repairer&quot; + testCaseNo;</span>
+<span class="fc" id="L273">		ModifyReservedRepairers(driver, repairer_login_username, repairer_login_password, statusPending, </span>
+<span class="fc" id="L274">				statusApproved, statusDecline, statusCancelled, statusComplete, startTime, endTime, startTimeError, endTimeError, </span>
+<span class="fc" id="L275">				successMessage, modifyStartTime, modifyEndTime, screenShotName);</span>
+<span class="fc" id="L276">	}</span>
+
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L280">		driver.quit();</span>
+<span class="fc" id="L281">		String verificationErrorString = verificationErrors.toString();</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">		if (!&quot;&quot;.equals(verificationErrorString)) {</span>
+<span class="nc" id="L283">			fail(verificationErrorString);</span>
+		}
+<span class="fc" id="L285">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

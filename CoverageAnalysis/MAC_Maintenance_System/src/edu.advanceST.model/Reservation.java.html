@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Reservation.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.model</a> &gt; <span class="el_source">Reservation.java</span></div><h1>Reservation.java</h1><pre class="source lang-java linenums"> package edu.advanceST.model;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
+import edu.advanceST.data.FacilityDAO;
+
+public class Reservation {
+
+	private Integer reservationId;
+	private String name;
+	private String username;
+	private Date date;
+	private String startTime;
+	private String endTime;
+	private String status;
+
+<span class="fc" id="L22">	public Reservation(Integer reservationId, String name, String username, Date date, String startTime, String endTime,</span>
+			String status) {
+<span class="fc" id="L24">		this.reservationId = reservationId;</span>
+<span class="fc" id="L25">		this.name = name;</span>
+<span class="fc" id="L26">		this.username = username;</span>
+<span class="fc" id="L27">		this.date = date;</span>
+<span class="fc" id="L28">		this.startTime = startTime;</span>
+<span class="fc" id="L29">		this.endTime = endTime;</span>
+<span class="fc" id="L30">		this.status = status;</span>
+<span class="fc" id="L31">	}</span>
+	
+<span class="fc" id="L33">	public Reservation() {</span>
+<span class="fc" id="L34">	}</span>
+	
+	public Integer getReservationId() {
+<span class="fc" id="L37">		return reservationId;</span>
+	}
+
+	public void setReservationId(Integer reservationId) {
+<span class="fc" id="L41">		this.reservationId = reservationId;</span>
+<span class="fc" id="L42">	}</span>
+
+	public String getName() {
+<span class="fc" id="L45">		return name;</span>
+	}
+
+	public void setName(String name) {
+<span class="fc" id="L49">		this.name = name;</span>
+<span class="fc" id="L50">	}</span>
+
+	public String getUsername() {
+<span class="fc" id="L53">		return username;</span>
+	}
+
+	public void setUsername(String username) {
+<span class="fc" id="L57">		this.username = username;</span>
+<span class="fc" id="L58">	}</span>
+
+	public Date getDate() {
+<span class="fc" id="L61">		return date;</span>
+	}
+
+	public void setDate(Date date) {
+<span class="fc" id="L65">		this.date = date;</span>
+<span class="fc" id="L66">	}</span>
+
+	public String getStartTime() {
+<span class="fc" id="L69">		return startTime;</span>
+	}
+
+	public void setStartTime(String startTime) {
+<span class="fc" id="L73">		this.startTime = startTime;</span>
+<span class="fc" id="L74">	}</span>
+
+	public String getEndTime() {
+<span class="fc" id="L77">		return endTime;</span>
+	}
+
+	public void setEndTime(String endTime) {
+<span class="fc" id="L81">		this.endTime = endTime;</span>
+<span class="fc" id="L82">	}</span>
+
+	public String getStatus() {
+<span class="fc" id="L85">		return status;</span>
+	}
+
+	public void setStatus(String status) {
+<span class="fc" id="L89">		this.status = status;</span>
+<span class="fc" id="L90">	}</span>
+
+	public static ReservationError validateReservation(Date date, String startTime, String endTime,
+			String facilityName) {
+
+<span class="fc" id="L95">		double timeDiff = Double.valueOf(endTime) - Double.valueOf(startTime);</span>
+<span class="fc" id="L96">		ReservationError reservationError = new ReservationError();</span>
+<span class="fc" id="L97">		Calendar c = Calendar.getInstance();</span>
+<span class="fc" id="L98">		Map&lt;String, String&gt; durationAndInterval = new FacilityDAO().getDurationAndInterval(facilityName);</span>
+<span class="fc" id="L99">		c.set(Calendar.HOUR_OF_DAY, 0);</span>
+<span class="fc" id="L100">		c.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L101">		c.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L102">		c.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">		if (date.compareTo(c.getTime()) &lt; 0) {</span>
+<span class="fc" id="L104">			reservationError.setDateError(&quot;Date should be today's date or future date&quot;);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">		} else if (Days.daysBetween(LocalDate.now(), LocalDate.fromDateFields(date)).getDays() != 0</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">				&amp;&amp; durationAndInterval.get(&quot;duration&quot;).equalsIgnoreCase(&quot;same day&quot;)) {</span>
+<span class="fc" id="L107">			reservationError.setDateError(&quot;Date should be today's date for this &quot; + facilityName + &quot; facility&quot;);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">		} else if (Days.daysBetween(LocalDate.now(), LocalDate.fromDateFields(date)).getDays() &gt; 7) {</span>
+<span class="fc" id="L109">			reservationError.setDateError(</span>
+<span class="fc" id="L110">					&quot;Date should be with in 1 week from today's date for this &quot; + facilityName + &quot; facility&quot;);</span>
+		}
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		if (date.compareTo(c.getTime()) == 0</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">				&amp;&amp; Calendar.getInstance().get(Calendar.HOUR_OF_DAY) &gt;= Double.valueOf(startTime)) {</span>
+<span class="fc" id="L114">			reservationError.setStartTimeError(&quot;Start time should be after current time&quot;);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">		} else if (timeDiff &lt;= 0) {</span>
+<span class="fc" id="L116">			reservationError.setEndTimeError(&quot;End time should be greater than Start time&quot;);</span>
+<span class="fc bfc" id="L117" title="All 4 branches covered.">		} else if (durationAndInterval.get(&quot;interval&quot;).equalsIgnoreCase(&quot;1 hour&quot;) &amp;&amp; (timeDiff != 1)) {</span>
+<span class="fc" id="L118">			reservationError.setEndTimeError(&quot;you have to book this &quot; + facilityName + &quot; facility for 1 hour&quot;);</span>
+<span class="fc bfc" id="L119" title="All 4 branches covered.">		} else if (durationAndInterval.get(&quot;interval&quot;).equalsIgnoreCase(&quot;2 hours&quot;) &amp;&amp; (timeDiff != 2)) {</span>
+<span class="fc" id="L120">			reservationError.setEndTimeError(&quot;you have to book this &quot; + facilityName + &quot; facility for 2 hours&quot;);</span>
+<span class="fc bfc" id="L121" title="All 4 branches covered.">		} else if (durationAndInterval.get(&quot;interval&quot;).equalsIgnoreCase(&quot;30 min&quot;) &amp;&amp; (timeDiff != 0.5)) {</span>
+<span class="fc" id="L122">			reservationError.setEndTimeError(&quot;you have to book this &quot; + facilityName + &quot; for 30 mins&quot;);</span>
+		}
+<span class="fc" id="L124">		return reservationError;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

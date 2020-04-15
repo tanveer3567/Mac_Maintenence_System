@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>RegistrationController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.controllers</a> &gt; <span class="el_source">RegistrationController.java</span></div><h1>RegistrationController.java</h1><pre class="source lang-java linenums">package edu.advanceST.controllers;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import edu.advanceST.data.RegistrationDAO;
+import edu.advanceST.model.Credentials;
+import edu.advanceST.model.CredentialsError;
+import edu.advanceST.model.SystemUser;
+import edu.advanceST.model.UserDetails;
+import edu.advanceST.model.UserDetailsError;
+
+@WebServlet(urlPatterns = { &quot;/registration&quot;, &quot;/viewProfile&quot;, &quot;/changeRole&quot;, &quot;/searchProfiles&quot;, &quot;/updateProfile&quot; })
+<span class="fc" id="L22">public class RegistrationController extends HttpServlet {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		if (request.getServletPath().equalsIgnoreCase(&quot;/registration&quot;)) {</span>
+<span class="fc" id="L29">			getServletContext().getRequestDispatcher(&quot;/registration.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/viewProfile&quot;)) {</span>
+<span class="fc" id="L31">			postViewProfiles(request, response);</span>
+<span class="fc" id="L32">			getServletContext().getRequestDispatcher(&quot;/viewProfile.jsp&quot;).forward(request, response);</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/searchProfiles&quot;)) {</span>
+<span class="fc" id="L34">			getServletContext().getRequestDispatcher(&quot;/searchProfiles.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L35">		} else {</span>
+<span class="fc" id="L36">			request.setAttribute(&quot;profile&quot;, new RegistrationDAO().viewProfile(request.getParameter(&quot;username&quot;)));</span>
+<span class="fc" id="L37">			request.setAttribute(&quot;password&quot;, new RegistrationDAO().getPassword(request.getParameter(&quot;username&quot;)));</span>
+<span class="fc" id="L38">			getServletContext().getRequestDispatcher(&quot;/updateProfile.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L40">	}</span>
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		if (request.getServletPath().equalsIgnoreCase(&quot;/registration&quot;)) {</span>
+<span class="fc" id="L45">			postRegistration(request, response);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/searchProfiles&quot;)) {</span>
+<span class="fc" id="L47">			postSearchProfile(request, response);</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		} else if (request.getServletPath().equalsIgnoreCase(&quot;/changeRole&quot;)) {</span>
+<span class="fc" id="L49">			postChangeRole(request, response);</span>
+<span class="fc" id="L50">		} else {</span>
+<span class="fc" id="L51">			postUpdateProfile(request, response);</span>
+		}
+<span class="fc" id="L53">	}</span>
+
+	private void postUpdateProfile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L58">		Object object1 = getRegistrationForm(request);</span>
+<span class="fc" id="L59">		Object object2 = getCredentials(request, true);</span>
+<span class="fc bfc" id="L60" title="All 4 branches covered.">		if (object1 instanceof UserDetails &amp;&amp; object2 instanceof Credentials) {</span>
+<span class="fc" id="L61">			UserDetails userDetails = (UserDetails) object1;</span>
+<span class="fc" id="L62">			Credentials credentails = (Credentials) object2;</span>
+<span class="fc" id="L63">			new RegistrationDAO().updateUserDetails(userDetails, credentails);</span>
+<span class="fc" id="L64">			request.setAttribute(&quot;Message&quot;, &quot;Profile successfully updated&quot;);</span>
+<span class="fc" id="L65">			request.setAttribute(&quot;profile&quot;, userDetails);</span>
+<span class="fc" id="L66">			getServletContext().getRequestDispatcher(&quot;/viewProfile.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L67">		} else {</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">			if (object1 instanceof UserDetailsError)</span>
+<span class="fc" id="L69">				request.setAttribute(&quot;userDetailsError&quot;, (UserDetailsError) object1);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">			if (object2 instanceof CredentialsError)</span>
+<span class="fc" id="L71">				request.setAttribute(&quot;credentialsError&quot;, (CredentialsError) object2);</span>
+<span class="fc" id="L72">			request.setAttribute(&quot;profile&quot;, new RegistrationDAO().viewProfile(request.getParameter(&quot;username&quot;)));</span>
+<span class="fc" id="L73">			request.setAttribute(&quot;password&quot;, new RegistrationDAO().getPassword(request.getParameter(&quot;username&quot;)));</span>
+<span class="fc" id="L74">			getServletContext().getRequestDispatcher(&quot;/updateProfile.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L76">	}</span>
+
+	private void postSearchProfile(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L81">		String username = request.getParameter(&quot;username&quot;);</span>
+<span class="fc" id="L82">		String utaId = request.getParameter(&quot;utaId&quot;);</span>
+<span class="fc" id="L83">		String role = request.getParameter(&quot;role&quot;);</span>
+<span class="fc" id="L84">		boolean isValid = true;</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">		if (!username.isEmpty()</span>
+<span class="pc bpc" id="L86" title="1 of 4 branches missed.">				&amp;&amp; (username.length() != 7 || !Pattern.compile(&quot;^[a-zA-Z0-9]*$&quot;).matcher(username).matches())) {</span>
+<span class="fc" id="L87">			isValid = false;</span>
+<span class="fc" id="L88">			request.setAttribute(&quot;usernameError&quot;, &quot;length of username should be equal to 7&quot;);</span>
+		}
+<span class="pc bpc" id="L90" title="1 of 6 branches missed.">		if (!utaId.isEmpty() &amp;&amp; (utaId.length() != 10 || !Pattern.compile(&quot;^[0-9]*$&quot;).matcher(utaId).matches())) {</span>
+<span class="fc" id="L91">			isValid = false;</span>
+<span class="fc" id="L92">			request.setAttribute(&quot;utaIdError&quot;, &quot;length of uta id  should be equal to 10&quot;);</span>
+		}
+<span class="fc bfc" id="L94" title="All 2 branches covered.">		if (isValid) {</span>
+<span class="fc" id="L95">			RegistrationDAO registrationDAO = new RegistrationDAO();</span>
+<span class="fc" id="L96">			List&lt;UserDetails&gt; profilesList = registrationDAO.getProfilesList(username, utaId);</span>
+<span class="fc" id="L97">			LinkedHashMap&lt;UserDetails, String&gt; profileMap = new LinkedHashMap&lt;UserDetails, String&gt;();</span>
+<span class="fc" id="L98">			profilesList.forEach(user -&gt; {</span>
+<span class="fc" id="L99">				String dbRole = registrationDAO.getRole(user.getUsername(), role);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">				if (!dbRole.isEmpty())</span>
+<span class="fc" id="L101">					profileMap.put(user, dbRole);</span>
+<span class="fc" id="L102">			});</span>
+<span class="fc" id="L103">			request.setAttribute(&quot;profileMap&quot;, profileMap);</span>
+<span class="fc" id="L104">			getServletContext().getRequestDispatcher(&quot;/searchProfiles.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L105">		} else {</span>
+<span class="fc" id="L106">			getServletContext().getRequestDispatcher(&quot;/searchProfiles.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L108">	}</span>
+
+	private void postViewProfiles(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L113">		String username = getProfile(request);</span>
+<span class="fc" id="L114">		UserDetails profile = new RegistrationDAO().viewProfile(username);</span>
+<span class="fc" id="L115">		request.setAttribute(&quot;profile&quot;, profile);</span>
+<span class="fc" id="L116">		String role = new RegistrationDAO().getRole(username, &quot;&quot;);</span>
+<span class="fc" id="L117">		request.setAttribute(&quot;role&quot;, role);</span>
+<span class="fc" id="L118">	}</span>
+
+	private String getProfile(HttpServletRequest request) {
+<span class="fc" id="L121">		String username = request.getParameter(&quot;username&quot;);</span>
+<span class="fc" id="L122">		return username;</span>
+	}
+
+	private void postChangeRole(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+<span class="fc" id="L127">		new RegistrationDAO().changeRole(request.getParameter(&quot;username&quot;), request.getParameter(&quot;role&quot;));</span>
+<span class="fc" id="L128">		getServletContext().getRequestDispatcher(&quot;/searchProfiles.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L129">	}</span>
+
+	private void postRegistration(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+<span class="fc" id="L134">		Object object1 = getRegistrationForm(request);</span>
+<span class="fc" id="L135">		Object object2 = getCredentials(request, false);</span>
+<span class="fc bfc" id="L136" title="All 4 branches covered.">		if (object1 instanceof UserDetails &amp;&amp; object2 instanceof Credentials) {</span>
+<span class="fc" id="L137">			UserDetails userDetails = (UserDetails) object1;</span>
+<span class="fc" id="L138">			Credentials credentails = (Credentials) object2;</span>
+<span class="fc" id="L139">			SystemUser systemUser = getSystemUser(request);</span>
+<span class="fc" id="L140">			new RegistrationDAO().addUserDetails(userDetails, systemUser, credentails);</span>
+<span class="fc" id="L141">			getServletContext().getRequestDispatcher(&quot;/index.jsp&quot;).forward(request, response);</span>
+<span class="fc" id="L142">		} else {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">			if (object1 instanceof UserDetailsError)</span>
+<span class="fc" id="L144">				request.setAttribute(&quot;userDetailsError&quot;, (UserDetailsError) object1);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">			if (object2 instanceof CredentialsError)</span>
+<span class="fc" id="L146">				request.setAttribute(&quot;credentialsError&quot;, (CredentialsError) object2);</span>
+<span class="fc" id="L147">			getServletContext().getRequestDispatcher(&quot;/registration.jsp&quot;).forward(request, response);</span>
+		}
+<span class="fc" id="L149">	}</span>
+
+	private SystemUser getSystemUser(HttpServletRequest request) {
+<span class="fc" id="L152">		String username = request.getParameter(&quot;username&quot;);</span>
+<span class="fc" id="L153">		String role = request.getParameter(&quot;role&quot;);</span>
+<span class="fc" id="L154">		SystemUser sysUser = new SystemUser();</span>
+<span class="fc" id="L155">		sysUser.setUsername(username);</span>
+<span class="fc" id="L156">		sysUser.setRole(role);</span>
+<span class="fc" id="L157">		return sysUser;</span>
+	}
+
+	private Object getCredentials(HttpServletRequest request, boolean isUpdate) {
+<span class="fc" id="L161">		String username = request.getParameter(&quot;username&quot;);</span>
+<span class="fc" id="L162">		String password = request.getParameter(&quot;password&quot;);</span>
+<span class="fc" id="L163">		CredentialsError error = Credentials.validate(username, password, false, isUpdate);</span>
+<span class="fc bfc" id="L164" title="All 4 branches covered.">		if (error.getUsernameError().isEmpty() &amp;&amp; error.getPasswordError().isEmpty()) {</span>
+<span class="fc" id="L165">			return new Credentials(username, password);</span>
+		} else {
+<span class="fc" id="L167">			return error;</span>
+		}
+	}
+
+	private Object getRegistrationForm(HttpServletRequest request) {
+<span class="fc" id="L172">		String username = request.getParameter(&quot;username&quot;);</span>
+<span class="fc" id="L173">		String firstname = request.getParameter(&quot;firstname&quot;);</span>
+<span class="fc" id="L174">		String middlename = request.getParameter(&quot;middlename&quot;);</span>
+<span class="fc" id="L175">		String lastname = request.getParameter(&quot;lastname&quot;);</span>
+<span class="fc" id="L176">		String utaId = request.getParameter(&quot;utaId&quot;);</span>
+<span class="fc" id="L177">		String phone = request.getParameter(&quot;phone&quot;);</span>
+<span class="fc" id="L178">		String email = request.getParameter(&quot;email&quot;);</span>
+<span class="fc" id="L179">		String numericAddress = request.getParameter(&quot;numericAddress&quot;);</span>
+<span class="fc" id="L180">		String streetAddress = request.getParameter(&quot;streetAddress&quot;);</span>
+<span class="fc" id="L181">		String city = request.getParameter(&quot;city&quot;);</span>
+<span class="fc" id="L182">		String state = request.getParameter(&quot;state&quot;);</span>
+<span class="fc" id="L183">		String zipcode = request.getParameter(&quot;zipcode&quot;);</span>
+<span class="fc" id="L184">		UserDetailsError error = UserDetails.validate(username, firstname, middlename, lastname, utaId, phone, email,</span>
+<span class="fc" id="L185">				numericAddress, streetAddress, city, state, zipcode);</span>
+<span class="fc bfc" id="L186" title="All 6 branches covered.">		if (error.getCityError().isEmpty() &amp;&amp; error.getEmailError().isEmpty() &amp;&amp; error.getFirstnameError().isEmpty()</span>
+<span class="fc bfc" id="L187" title="All 4 branches covered.">				&amp;&amp; error.getLastnameError().isEmpty() &amp;&amp; error.getPhoneError().isEmpty()</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">				&amp;&amp; error.getStreetAddressError().isEmpty() &amp;&amp; error.getUsernameError().isEmpty()</span>
+<span class="fc bfc" id="L189" title="All 4 branches covered.">				&amp;&amp; error.getUtaIdError().isEmpty() &amp;&amp; error.getZipcodeError().isEmpty()) {</span>
+
+<span class="fc" id="L191">			UserDetails userDetails = new UserDetails();</span>
+<span class="fc" id="L192">			userDetails.setUsername(username);</span>
+<span class="fc" id="L193">			userDetails.setFirstname(firstname);</span>
+<span class="fc" id="L194">			userDetails.setMiddlename(middlename);</span>
+<span class="fc" id="L195">			userDetails.setLastname(lastname);</span>
+<span class="fc" id="L196">			userDetails.setUtaId(Long.valueOf(utaId));</span>
+<span class="fc" id="L197">			userDetails.setPhone(Long.valueOf(phone));</span>
+<span class="fc" id="L198">			userDetails.setEmail(email);</span>
+<span class="fc" id="L199">			userDetails.setNumericAddress(Integer.valueOf(numericAddress));</span>
+<span class="fc" id="L200">			userDetails.setStreetAddress(streetAddress);</span>
+<span class="fc" id="L201">			userDetails.setCity(city);</span>
+<span class="fc" id="L202">			userDetails.setState(state);</span>
+<span class="fc" id="L203">			userDetails.setZipcode(zipcode);</span>
+<span class="fc" id="L204">			return userDetails;</span>
+		} else {
+<span class="fc" id="L206">			return error;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

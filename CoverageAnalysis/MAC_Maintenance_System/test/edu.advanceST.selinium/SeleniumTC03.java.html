@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>SeleniumTC03.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.selinium</a> &gt; <span class="el_source">SeleniumTC03.java</span></div><h1>SeleniumTC03.java</h1><pre class="source lang-java linenums">package edu.advanceST.selinium;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.FileInputStream;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import MAC_Maintenance_System.UtilFunctions;
+import junitparams.FileParameters;
+import junitparams.JUnitParamsRunner;
+
+@RunWith(JUnitParamsRunner.class)
+<span class="fc" id="L25">public class SeleniumTC03 extends MAC_Maintenance_System.AdminFunctions{</span>
+	
+<span class="fc" id="L27">	private boolean acceptNextAlert = true;</span>
+<span class="fc" id="L28">	private StringBuffer verificationErrors = new StringBuffer();</span>
+	public static String sAppURL, sSharedUIMapPath, username,password;
+<span class="fc" id="L30">	private UtilFunctions util = new UtilFunctions();</span>
+
+	  @Before
+	  public void setUp() throws Exception {
+<span class="fc" id="L34">		  System.setProperty(&quot;webdriver.chrome.driver&quot;, &quot;C:/chromedriver_win32/chromedriver.exe&quot;);</span>
+<span class="fc" id="L35">	    driver = new ChromeDriver();</span>
+<span class="fc" id="L36">	    prop = new Properties();</span>
+<span class="fc" id="L37">	    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);</span>
+<span class="fc" id="L38">	    prop.load(new FileInputStream(&quot;./configuration/MAC_Configuration.properties&quot;));</span>
+<span class="fc" id="L39">	    sAppURL = prop.getProperty(&quot;sAppURL&quot;);</span>
+<span class="fc" id="L40">	    sSharedUIMapPath = prop.getProperty(&quot;SharedUIMap&quot;);</span>
+<span class="fc" id="L41">	    prop.load(new FileInputStream(&quot;./Login/Login.properties&quot;));</span>
+<span class="fc" id="L42">	    username = prop.getProperty(&quot;admin_login_username&quot;);</span>
+<span class="fc" id="L43">	    password = prop.getProperty(&quot;admin_login_password&quot;);</span>
+	    
+	    // Load Shared UI Map
+<span class="fc" id="L46">	    prop.load(new FileInputStream(sSharedUIMapPath));</span>
+	    // util = new UtilFunctions(driver, prop);
+<span class="fc" id="L48">	}</span>
+	
+	
+	  	@Test
+		@FileParameters(value=&quot;excel/TC03a_test_cases.csv&quot;)
+	  	public void adminRegistration(String testCaseNo, String username, String password, String role, String firstname, String middlename, String lastname,
+				String utaId, String phone, String email, String numericAddress, String streetAddress, String city,
+				String state, String zipcode, String usernameError, String passwordError, String firstnameError, String middlenameError,
+				String lastnameError, String utaIdError, String phoneError, String emailError, String numericAddressError,
+				String streetAddressError, String cityError, String stateError, String zipcodeError) throws Exception {
+			
+<span class="fc" id="L59">		  	String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L60">			driver.get(sAppURL + &quot;registration&quot;);</span>
+<span class="fc" id="L61">			String screenShotName = methodName + &quot; Repairer_Registration &quot; + testCaseNo;</span>
+<span class="fc" id="L62">			util.Register(driver, prop, username, password, role, firstname, middlename, lastname, utaId, phone,</span>
+<span class="fc" id="L63">					email, numericAddress, streetAddress, city, state, zipcode, screenShotName);</span>
+<span class="fc" id="L64">			Thread.sleep(500);</span>
+<span class="fc" id="L65">			util.verifyRegistrationErrorMessages(driver, prop, usernameError, passwordError, firstnameError, middlenameError,</span>
+<span class="fc" id="L66">					lastnameError, utaIdError, phoneError, emailError, numericAddressError, streetAddressError, cityError,</span>
+<span class="fc" id="L67">					zipcodeError, (methodName + &quot; verifyAdminRegisterErrMsg test case &quot; + testCaseNo));</span>
+<span class="fc" id="L68">		}</span>
+	  
+	  @Test
+		@FileParameters(value=&quot;excel/TC03b_test_cases.csv&quot;)
+		public void admin_Login(String testCaseNo, String username, String password, String usernameError,
+				String PasswordError) throws Exception {
+<span class="fc" id="L74">			driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L75">			String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L76">			driver.get(sAppURL);</span>
+<span class="fc" id="L77">			String screenShotName = methodName +&quot; AdminLogin test case &quot; + testCaseNo;</span>
+<span class="fc" id="L78">			util.Login(driver, prop, username, password, screenShotName);</span>
+<span class="fc" id="L79">			Thread.sleep(200);</span>
+<span class="fc" id="L80">		  	util.verifyLoginErrorMessages(driver, prop, usernameError, PasswordError, (methodName+&quot; verifyAdminLoginErrMsg test case &quot;+testCaseNo));</span>
+<span class="fc" id="L81">		}</span>
+	  	
+	  @Test
+		@FileParameters(value=&quot;excel/TC03c_test_cases.csv&quot;)
+		public void adminSearchProfile(String testCaseNo, String uName, String UTAid, String Role, String usernameError, String utaIdError) throws Exception {
+<span class="fc" id="L86">			driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L87">			String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L88">			driver.get(sAppURL);</span>
+<span class="fc" id="L89">			String screenShotName = methodName +&quot; AdminLogin test case &quot; + testCaseNo;</span>
+<span class="fc" id="L90">			SearchUserRole(driver, username, password, uName, UTAid, Role, screenShotName);</span>
+<span class="fc" id="L91">		}</span>
+	  
+	  @Test
+		@FileParameters(value=&quot;excel/TC03d_test_cases.csv&quot;)
+		public void adminChangeProfile(String testCaseNo, String sRole, String cRole) throws Exception {
+<span class="fc" id="L96">			driver.get(sAppURL + &quot;logout&quot;);</span>
+<span class="fc" id="L97">			String methodName= new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L98">			driver.get(sAppURL);</span>
+<span class="fc" id="L99">			String screenShotName = methodName +&quot; AdminLogin test case &quot; + testCaseNo;</span>
+<span class="fc" id="L100">			ChangeUserRole(driver, username, password, sRole, cRole, screenShotName);</span>
+<span class="fc" id="L101">		}</span>
+	  
+	  @Test
+		@FileParameters(value = &quot;excel/TC03f_test_cases.csv&quot;)
+		public void adminEditUserProfile(String testCaseNo, String adminUsername, String adminPassword, String username,
+				String role, String firstname, String middlename, String lastname, String phone, 
+				String email, String numericAddress, String streetAddress, String city, String state, String zipcode, 
+				String passwordError, String firstnameError, String lastnameError, String phoneError, String emailError, 
+				String streetAddressError, String cityError, String zipcodeError) throws Exception {
+
+<span class="fc" id="L111">			String methodName = new Throwable().getStackTrace()[0].getMethodName();</span>
+<span class="fc" id="L112">			driver.get(sAppURL);</span>
+<span class="fc" id="L113">			String screenShotName = methodName + &quot; UserUpdateProfile test case &quot; + testCaseNo;</span>
+<span class="fc" id="L114">			editUserProfile(driver, adminUsername, adminPassword, username, role, firstname, middlename, lastname, phone, email,</span>
+<span class="fc" id="L115">					numericAddress, streetAddress, city, state, zipcode, screenShotName);</span>
+//			Thread.sleep(500);
+<span class="fc" id="L117">			verifyEditUserProfileErrorMessages(driver, passwordError, firstnameError, </span>
+<span class="fc" id="L118">				lastnameError, phoneError, emailError, streetAddressError, cityError,</span>
+<span class="fc" id="L119">				zipcodeError, (methodName + &quot; verifyEditUserProfileErrorMessages test case &quot; + testCaseNo));</span>
+
+<span class="fc" id="L121">		}</span>
+		
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L125">		driver.quit();</span>
+<span class="fc" id="L126">		String verificationErrorString = verificationErrors.toString();</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">		if (!&quot;&quot;.equals(verificationErrorString)) {</span>
+<span class="nc" id="L128">			fail(verificationErrorString);</span>
+		}
+<span class="fc" id="L130">	}</span>
+
+	private boolean isElementPresent(By by) {
+		try {
+<span class="nc" id="L134">			driver.findElement(by);</span>
+<span class="nc" id="L135">			return true;</span>
+<span class="nc" id="L136">		} catch (NoSuchElementException e) {</span>
+<span class="nc" id="L137">			return false;</span>
+		}
+	}
+
+	private boolean isAlertPresent() {
+		try {
+<span class="nc" id="L143">			driver.switchTo().alert();</span>
+<span class="nc" id="L144">			return true;</span>
+<span class="nc" id="L145">		} catch (NoAlertPresentException e) {</span>
+<span class="nc" id="L146">			return false;</span>
+		}
+	}
+
+	private String closeAlertAndGetItsText() {
+		try {
+<span class="nc" id="L152">			Alert alert = driver.switchTo().alert();</span>
+<span class="nc" id="L153">			String alertText = alert.getText();</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">			if (acceptNextAlert) {</span>
+<span class="nc" id="L155">				alert.accept();</span>
+<span class="nc" id="L156">			} else {</span>
+<span class="nc" id="L157">				alert.dismiss();</span>
+			}
+<span class="nc" id="L159">			return alertText;</span>
+		} finally {
+<span class="nc" id="L161">			acceptNextAlert = true;</span>
+		}
+	}
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>

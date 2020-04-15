@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MarDAO.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Merged (Dec 2, 2019 2:29:30 PM)</a> &gt; <a href="../../index.html" class="el_group">MAC_Maintenance_System</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.advanceST.data</a> &gt; <span class="el_source">MarDAO.java</span></div><h1>MarDAO.java</h1><pre class="source lang-java linenums">package edu.advanceST.data;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.advanceST.model.AssignMar;
+import edu.advanceST.model.Mar;
+import edu.advanceST.util.SQLConnection;
+
+<span class="fc" id="L15">public class MarDAO {</span>
+
+<span class="fc" id="L17">	static SQLConnection DBMgr = SQLConnection.getInstance();</span>
+
+	public boolean addAssignMar(AssignMar assignMar) {
+<span class="fc" id="L20">		boolean isValid = false;</span>
+<span class="fc" id="L21">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L23">			PreparedStatement prepareStatement = conn.prepareStatement(</span>
+<span class="fc" id="L24">					&quot;insert into assign_mar (mar_number, assigned_to, assigned_date, etr) values (?,?,?,?)&quot;);</span>
+<span class="fc" id="L25">			prepareStatement.setLong(1, assignMar.getMarNumber());</span>
+<span class="fc" id="L26">			prepareStatement.setString(2, assignMar.getAssignedTo());</span>
+<span class="fc" id="L27">			prepareStatement.setDate(3, new Date(assignMar.getAssignedDate().getTime()));</span>
+<span class="fc" id="L28">			prepareStatement.setString(4, assignMar.getEtr());</span>
+<span class="fc" id="L29">			prepareStatement.executeUpdate();</span>
+<span class="fc" id="L30">			isValid = true;</span>
+<span class="fc" id="L31">			conn.close();</span>
+<span class="pc" id="L32">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L34">		return isValid;</span>
+	}
+
+	public AssignMar getAssignMarByNumber(long marNumber) {
+
+<span class="fc" id="L39">		Connection conn = SQLConnection.getDBConnection();</span>
+<span class="fc" id="L40">		AssignMar asssignMar = null;</span>
+		try {
+<span class="fc" id="L42">			PreparedStatement prepareStatement = conn.prepareStatement(&quot;select * from assign_mar where mar_number = ?&quot;);</span>
+<span class="fc" id="L43">			prepareStatement.setLong(1, marNumber);</span>
+<span class="fc" id="L44">			ResultSet results = prepareStatement.executeQuery();</span>
+<span class="fc" id="L45">			results.next();</span>
+<span class="fc" id="L46">			asssignMar = new AssignMar(Long.valueOf(results.getString(1)), results.getString(2), results.getDate(3),</span>
+<span class="fc" id="L47">					results.getString(4));</span>
+<span class="fc" id="L48">			conn.close();</span>
+<span class="fc" id="L49">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L51">		return asssignMar;</span>
+	}
+
+	public Mar getMarByNumber(long marNumber) {
+
+<span class="fc" id="L56">		Connection conn = SQLConnection.getDBConnection();</span>
+<span class="fc" id="L57">		Mar mar = null;</span>
+		try {
+<span class="fc" id="L59">			PreparedStatement prepareStatement = conn.prepareStatement(&quot;select * from mar where mar_number = ?&quot;);</span>
+<span class="fc" id="L60">			prepareStatement.setLong(1, marNumber);</span>
+<span class="fc" id="L61">			ResultSet results = prepareStatement.executeQuery();</span>
+<span class="fc" id="L62">			results.next();</span>
+<span class="fc" id="L63">			mar = new Mar(results.getLong(1), results.getString(2), results.getString(3), results.getString(4),</span>
+<span class="fc" id="L64">					results.getString(5), results.getString(7), results.getDate(6), false);</span>
+<span class="fc" id="L65">			conn.close();</span>
+<span class="pc" id="L66">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L68">		return mar;</span>
+	}
+
+	public boolean addMARdetails(Mar MAR_details) {
+<span class="fc" id="L72">		boolean isValid = false;</span>
+<span class="fc" id="L73">		Connection conn = SQLConnection.getDBConnection();</span>
+		try {
+<span class="fc" id="L75">			PreparedStatement prepareStatement1 = conn.prepareStatement(</span>
+<span class="fc" id="L76">					&quot;insert into mar (facility_type, name, urgency, description, date, reportedBy) values (?,?,?,?,?,?)&quot;);</span>
+<span class="fc" id="L77">			prepareStatement1.setString(1, MAR_details.getFacilityType());</span>
+<span class="fc" id="L78">			prepareStatement1.setString(2, MAR_details.getName());</span>
+<span class="fc" id="L79">			prepareStatement1.setString(3, MAR_details.getUrgency());</span>
+<span class="fc" id="L80">			prepareStatement1.setString(4, MAR_details.getDescription());</span>
+<span class="fc" id="L81">			prepareStatement1.setDate(5, new Date(new java.util.Date().getTime()));</span>
+<span class="fc" id="L82">			prepareStatement1.setString(6, MAR_details.getReportedBy());</span>
+<span class="fc" id="L83">			prepareStatement1.executeUpdate();</span>
+<span class="fc" id="L84">			isValid = true;</span>
+<span class="fc" id="L85">			conn.commit();</span>
+<span class="fc" id="L86">			conn.close();</span>
+<span class="pc" id="L87">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L89">		return isValid;</span>
+	}
+
+	public List&lt;Mar&gt; getMars(String assignedTo) {
+
+<span class="fc" id="L94">		Connection conn = SQLConnection.getDBConnection();</span>
+<span class="fc" id="L95">		List&lt;Mar&gt; unAssiMarList = new ArrayList&lt;Mar&gt;();</span>
+<span class="fc" id="L96">		PreparedStatement prepareStatement = null;</span>
+		try {
+<span class="fc" id="L98">			prepareStatement = conn.prepareStatement(</span>
+<span class="fc" id="L99">					&quot;select * from mar m1 inner join assign_mar m2 on m1.mar_number = m2.mar_number where assigned_to = ? order by m1.mar_number desc&quot;);</span>
+<span class="fc" id="L100">			prepareStatement.setString(1, assignedTo);</span>
+<span class="fc" id="L101">			ResultSet results = prepareStatement.executeQuery();</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">			while (results.next()) {</span>
+<span class="fc" id="L103">				unAssiMarList.add(new Mar(results.getLong(1), results.getString(2), results.getString(3),</span>
+<span class="fc" id="L104">						results.getString(4), results.getString(5), results.getString(7), results.getDate(6), true));</span>
+			}
+<span class="fc" id="L106">			conn.close();</span>
+<span class="pc" id="L107">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L109">		return unAssiMarList;</span>
+	}
+
+	public List&lt;Mar&gt; searchMars(String assigned, Date assignedDate) {
+
+<span class="fc" id="L114">		Connection conn = SQLConnection.getDBConnection();</span>
+<span class="fc" id="L115">		List&lt;Mar&gt; marList = new ArrayList&lt;Mar&gt;();</span>
+<span class="fc" id="L116">		PreparedStatement prepareStatement = null;</span>
+<span class="fc" id="L117">		Boolean isAssigned = null;</span>
+		try {
+<span class="fc" id="L119">			ResultSet results = null;</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">			if (assigned.equalsIgnoreCase(&quot;yes&quot;)) {</span>
+<span class="fc" id="L121">					prepareStatement = conn.prepareStatement(</span>
+<span class="fc" id="L122">							&quot;select * from mar inner join assign_mar on mar.mar_number = assign_mar.mar_number where date = ? order by mar.mar_number desc&quot;);</span>
+<span class="fc" id="L123">					prepareStatement.setDate(1, assignedDate);</span>
+<span class="fc" id="L124">				isAssigned = true;</span>
+<span class="fc" id="L125">			} else {</span>
+<span class="fc" id="L126">				prepareStatement = conn.prepareStatement(</span>
+<span class="fc" id="L127">						&quot;select * from mar where mar_number not in (select mar_number from assign_mar) order by mar_number desc&quot;);</span>
+<span class="fc" id="L128">				isAssigned = false;</span>
+			}
+<span class="fc" id="L130">			results = prepareStatement.executeQuery();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">			while (results.next()) {</span>
+<span class="fc" id="L132">				marList.add(</span>
+<span class="fc" id="L133">						new Mar(results.getLong(1), results.getString(2), results.getString(3), results.getString(4),</span>
+<span class="fc" id="L134">								results.getString(5), results.getString(7), results.getDate(6), isAssigned));</span>
+			}
+<span class="fc" id="L136">			conn.close();</span>
+<span class="pc" id="L137">		} catch (SQLException e) {</span>
+		}
+<span class="fc" id="L139">		return marList;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>Merged (Dec 2, 2019 2:29:30 PM)</div></body></html>
